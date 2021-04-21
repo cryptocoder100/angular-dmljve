@@ -1,0 +1,138 @@
+<div>
+    <p-menubar tabindex="0" [model]="items">
+        <!-- <input type="text" pInputText placeholder="Search"> -->
+        <div>
+            <a pTooltip="Shotcut keys (Alt+X)" tabindex="0" accesskey="x" (click)="display = true" id="sidebar1">
+                <i class="far fa-keyboard"></i>
+            </a>
+            &nbsp;&nbsp;
+            <label class="user-label">
+              Env:
+              <label class="value-label">{{userEnvironment.environmentDetails.environmentName}}</label>
+            </label>
+            &nbsp;&nbsp;
+            <label class="user-label">
+              <span>
+                <i class="fa fa-user"></i>
+              </span>
+              User:
+              <label class="value-label">{{userEnvironment.currentUser.userId}}</label>
+            </label>
+            &nbsp;&nbsp;
+            <label class="user-label">Collection Month: </label>
+            <label class="value-label"> {{collectionMonth}}/{{collectionYear}}</label>
+            &nbsp;&nbsp;
+
+            <button pButton type="button" role="button" (click)='doLogout()' accesskey="g" class="ui-button-default"
+            icon="fas fa-sign-out-alt" label="Log&#818;out">
+          </button>
+        </div>
+    </p-menubar>
+</div>
+
+
+
+
+<!--keyshort cut contnets-->
+<p-sidebar [(visible)]="display" position="left" styleClass="ui-sidebar-lg">
+  <div class="box" id="keybox">
+    <h4> Keyboard legend</h4>
+    <div class="box-col">
+      <h4>Global keyboard shortcuts:</h4>
+      <ul class="keyboard-legend">
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Esc </span> </span> <span class="button-descr"> close popup</span> </li>
+        <li> <span class="button-preview"> <span class="key-button"> Alt </span> + <span class="key-button wide leftAlign"> Up arrow </span> </span> <span class="button-descr"> close popup</span> </li>
+        <li> <span class="button-preview"> <span class="key-button"> Alt </span> + <span class="key-button wide leftAlign"> Down arrow </span> </span> <span class="button-descr"> open popup</span> </li>
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Arrow keys </span> </span> <span class="button-descr"> to navigate over the adjacent item</span> </li>
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Alt </span> + <span class="key-button "> [_] </span> </span> <span class="button-descr"> shortcut for button is identified by the underscored character(if available) </span> </li>
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Alt </span> + <span class="key-button wide leftAlign"> Shift </span> + <span class="key-button "> [@] </span> </span> <span class="button-descr"> shortcut for verify email button that shows @ </span> </li>
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Alt </span> + <span class="key-button wide leftAlign"> Shift </span> + <span class="key-button "> [&lt;] </span> </span> <span class="button-descr"> shortcut for previous microdata button that shows < with the underscored character</span> </li>
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Alt </span> + <span class="key-button wide leftAlign"> Shift </span> + <span class="key-button "> [&gt;] </span> </span> <span class="button-descr"> shortcut for next microdata button that shows > with the underscored character</span> </li>
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Alt </span> + <span class="key-button "> [<span style="text-decoration:underline">1</span>] </span> </span> <span class="button-descr"> shortcut for dialog box answer "YES"</span> </li>
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Alt </span> + <span class="key-button "> [<span style="text-decoration:underline">2</span>] </span> </span> <span class="button-descr"> shortcut for dialog box answer "NO"</span> </li>
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Alt </span> + <span class="key-button "> [<span style="text-decoration:underline">Any Number</span>] </span> </span> <span class="button-descr"> shortcut for button is identified by the underscored character(if available)</span> </li>
+      </ul>
+    </div>
+    <div class="box-col">
+      <h4>Date picker specific keyboard navigation:</h4>
+      <ul class="keyboard-legend">
+        <li> <span class="button-preview"> <span class="key-button"> Alt </span> + <span class="key-button wide leftAlign"> Down arrow </span> </span> <span class="button-descr"> open calendar</span> </li>
+        <li> <span class="button-preview"> <span class="key-button"> Alt </span> + <span class="key-button wide leftAlign"> Up arrow </span> </span> <span class="button-descr"> close calendar</span> </li>
+        <li> <span class="button-preview"> <span class="key-button"> Ctrl </span> + <span class="key-button wide leftAlign"> Left arrow </span> </span> <span class="button-descr"> navigate to previous month</span> </li>
+        <li> <span class="button-preview"> <span class="key-button"> Ctrl </span> + <span class="key-button wide leftAlign"> Right arrow </span> </span> <span class="button-descr"> navigate to next month</span> </li>
+        <li> <span class="button-preview"> <span class="key-button"> Home </span></span> <span class="button-descr"> highlight first day of the month </span> </li>
+        <li> <span class="button-preview"> <span class="key-button"> End </span></span> <span class="button-descr"> highlight last day of the month </span> </li>
+      </ul>
+    </div>
+    <div class="box-col">
+      <h4>Home menu item navigation:</h4>
+      <ul class="keyboard-legend">
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Alt </span> + <span class="key-button"> h </span> </span> <span class="button-descr"> highlight home on the navigation bar </span> </li>
+      </ul>
+    </div>
+    <div class="box-col">
+      <h4>Panel shifting shortcut:</h4>
+      <ul class="keyboard-legend">
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Alt </span> + <span class="key-button"> 5 </span> </span> <span class="button-descr"> shift to next panel in round robin fashion(when applicable)</span> </li>
+      </ul>
+    </div>
+    <div class="box-col">
+      <h4>Quick access shortcut:</h4>
+      <ul class="keyboard-legend">
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Alt </span> + <span class="key-button"> q </span> </span> <span class="button-descr"> shift focus to quick access input box (when applicable)</span> </li>
+      </ul>
+    </div>
+    <div class="box-col">
+      <h4>System setting shortcut:</h4>
+      <ul class="keyboard-legend">
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Alt </span> + <span class="key-button"> a </span> </span> <span class="button-descr"> to enable/disable editing checkbox in system setting page</span> </li>
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Alt </span> + <span class="key-button"> w </span> </span> <span class="button-descr"> shift focus to system settings tab </span> </li>
+      </ul>
+    </div>
+    <div class="box-col">
+      <h4>Scheduler specific keyboard navigation:</h4>
+      <ul class="keyboard-legend">
+        <li><span class="button-preview"><span class="key-button">Enter</span></span><span class="button-descr">creates new event from empty cell or selection. On selected event opens the edit popup window.</span></li>
+        <li><span class="button-preview"><span class="key-button">Tab</span></span><span class="button-descr">moves between available events.</span></li>
+        <li><span class="button-preview"><span class="key-button leftAlign">Shift</span> + <span class="key-button">Tab</span></span><span class="button-descr">moves between the available events backwards.</span></li>
+        <li><span class="button-preview"><span class="key-button">Esc</span></span><span class="button-descr">closes the edit popup window.</span></li>
+      </ul>
+    </div>
+    <div class="box-col">
+      <h4>Grid specific keyboard navigation:</h4>
+      <h6>Actions apply on grid header</h6>
+      <ul class="keyboard-legend">
+        <li><span class="button-preview"><span class="key-button">Enter</span></span><span class="button-descr">sort by the column.</span></li>
+        <li> <span class="button-preview"> <span class="key-button"> Alt </span> + <span class="key-button wide leftAlign"> Down arrow </span> </span> <span class="button-descr"> open the filter menu </span> </li>
+        <li><span class="button-preview"><span class="key-button">Esc</span></span><span class="button-descr">close the filter menu.</span></li>
+      </ul>
+
+      <h6>Actions apply on grid data table</h6>
+      <ul class="keyboard-legend">
+        <li><span class="button-preview"><span class="key-button wider">Page Up</span></span><span class="button-descr">pages on previous page</span></li>
+        <li><span class="button-preview"><span class="key-button wider">Page Down</span></span><span class="button-descr">pages on next page</span></li>
+        <li><span class="button-preview"><span class="key-button">Space</span></span><span class="button-descr">selects the currently highlighted cell</span></li>
+        <li><span class="button-preview"><span class="key-button leftAlign">Ctrl</span> + <span class="key-button">Space</span></span><span class="button-descr">selects or deselects the current cell, while persisting previously selected cells (only for selection mode "multiple")</span></li>
+        <li><span class="button-preview"><span class="key-button">Enter</span></span><span class="button-descr">open selected case (only available in case list page and find reporter page)</span></li>
+      </ul>
+    </div>
+    <div class="box-col">
+      <h4>Tab specific keyboard navigation:</h4>
+      <ul class="keyboard-legend">
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Arrow keys </span> </span> <span class="button-descr"> to navigate over the adjacent tab(When tabs are being highlighted)</span> </li>
+      </ul>
+    </div>
+    <div class="box-col">
+      <h4>Browse contol specific keyboard navigation:</h4>
+      <ul class="keyboard-legend">
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Alt </span> + <span class="key-button"> l </span> </span> <span class="button-descr"> to get focus on browse (choose file) control on Import Data page. </span> </li>
+        <li> <span class="button-preview"> <span class="key-button wide leftAlign"> Alt </span> + <span class="key-button"> m </span> </span> <span class="button-descr"> to get focus on second browse (choose file) control on Import Data page. </span> </li>
+      </ul>
+    </div>
+  </div>
+</p-sidebar>
+
+
+
+<p-confirmDialog header="Confirm" [style]="{width: '25vw'}" >
+</p-confirmDialog>
