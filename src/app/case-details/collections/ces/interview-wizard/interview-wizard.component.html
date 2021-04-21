@@ -1,0 +1,242 @@
+<p-accordion  [(activeIndex)]="accordionIndex">
+  <p-accordionTab id="interviewwizard" header="Interview Wizard">
+    <div class="p-grid">
+      <div class="p-col-9">
+        <pe-steps [(activeIndex)]="activeIndex" [disableNext]="disableNext" [disableDone]="disableDone"
+           (onStepsDone)="done()" [disablePrev]="disablePrev"  id="interview-wizard" (change)="onChange($event)">
+
+          <!--wizard panel 1-->
+          <pe-step label="Start Interview">
+            <div class="p-grid">
+              <div tabIndex="0" #startInterview class="p-col-12">
+                {{beginInterviewText}}
+              </div>
+            </div>
+            <div class="p-grid">
+              <div class="p-col-4">
+              </div>
+              <div class="p-col-4">
+                <p-radioButton tabIndex="0" name="rdDialOptions" name="grpStartInterview" (onClick)="onDialOptionsClick()" value="dial" label="Dial" [(ngModel)]="selecteddialOptionValue" inputId="opt1"></p-radioButton>
+              </div>
+              <div class="p-col-4">
+              </div>
+            </div>
+            <div class="p-grid">
+              <div class="p-col-4">
+              </div>
+              <div class="p-col-4">
+                <p-radioButton tabIndex="0" name="rdDialOptions" (onClick)="onDialOptionsClick()" name="grpStartInterview" value="no-dial" label="Don't Dial" [(ngModel)]="selecteddialOptionValue" inputId="opt2"></p-radioButton>
+              </div>
+              <div class="p-col-4">
+              </div>
+            </div>
+          </pe-step>
+
+          <!--wizard panel 2-->
+          <pe-step label="Locate Respondent">
+            <div class="p-grid">
+              <div tabIndex="0" #locateRespondent class="p-col-12">
+                {{locateRespondentWizardText}}
+              </div>
+            </div>
+            <div class="p-grid">
+              <div class="p-col-4">
+              </div>
+              <div class="p-col-4">
+                <p-radioButton tabIndex="0" name="rdCallOptions" (onClick)="onCallOptionsClick()" name="grpLocateRespondent" value="speak" label="Speak With Contact" [(ngModel)]="selectedlocateRespondentCallOptionValue" inputId="opt1"></p-radioButton>
+              </div>
+              <div class="p-col-4">
+              </div>
+            </div>
+            <div class="p-grid">
+              <div class="p-col-4">
+              </div>
+              <div class="p-col-4">
+                <p-radioButton tabIndex="0" name="rdCallOptions" (onClick)="onCallOptionsClick()" name="grpLocateRespondent" value="unAvailable" label="Contact Unavailable" [(ngModel)]="selectedlocateRespondentCallOptionValue" inputId="opt2"></p-radioButton>
+              </div>
+              <div class="p-col-4">
+              </div>
+            </div>
+            <div class="p-grid">
+              <div class="p-col-4">
+              </div>
+              <div class="p-col-4">
+                <p-radioButton tabIndex="0" name="rdCallOptions" (onClick)="onCallOptionsClick()" name="grpLocateRespondent" value="badPhone" label="badphone" [(ngModel)]="selectedlocateRespondentCallOptionValue" inputId="opt2"></p-radioButton>
+              </div>
+              <div class="p-col-4">
+              </div>
+            </div>
+          </pe-step>
+
+          <!--wizard panel 3-->
+          <pe-step label="Interview Contents">
+            <div class="p-grid">
+              <div tabIndex="0" class="p-col-12">
+                <label tabIndex="0">{{callInterviewTranscriptText}}</label>
+                <br> <br>
+                <p-dropdown tabIndex="0" *ngIf="canShowCallResultsOption" optionLabel="text" [options]="callResultsOption"
+                  [style]="{ width: '50%', 'min-width': '50%' }" appendTo="body"
+                  [(ngModel)]="SelectedCallResultOption">
+                </p-dropdown>
+
+              </div>
+            </div>
+          </pe-step>
+
+           <!--wizard panel 4-->
+          <pe-step label="Probe for Problems">
+            <div class="p-grid">
+              <div tabIndex="0" class="p-col-12">
+                <label tabIndex="0">{{probeQuestion}}</label>
+              </div>
+              <div class="p-grid">
+                <div class="p-col-4">
+                </div>
+                <div class="p-col-4">
+                  <p-radioButton tabIndex="0" name="rdProbeOptions" name="grpProbe" value="yes" label="Yes" [(ngModel)]="selectedProbeOptionValue" inputId="opt1"></p-radioButton>
+                </div>
+                <div class="p-col-4">
+                </div>
+              </div>
+              <div class="p-grid">
+                <div class="p-col-4">
+                </div>
+                <div class="p-col-4">
+                  <p-radioButton tabIndex="0" name="rdProbeOptions" name="grpProbe" value="no" label="No" [(ngModel)]="selectedProbeOptionValue" inputId="opt2"></p-radioButton>
+                </div>
+                <div class="p-col-4">
+                </div>
+              </div>
+            </div>
+          </pe-step>
+
+
+           <!--wizard panel 5-->
+           <pe-step label="Specify Problems">
+            <div class="p-grid">
+              <div class="p-col-12">
+                <!-- <label>{{callInterviewTranscriptText}}</label> -->
+
+                <!-- <p-dropdown *ngIf="canShowCallResultsOption" optionLabel="text" [options]="callResultsOption"
+                  [style]="{ width: '100%', 'min-width': '100%' }" appendTo="body"
+                  [(ngModel)]="selectedCallResultsOptionValue">
+                </p-dropdown> -->
+
+
+              </div>
+            </div>
+          </pe-step>
+
+
+          <!--wizard panel 6-->
+          <pe-step label="Contact Unavailable">
+            <div class="p-grid">
+              <div class="p-col-12">
+                <label tabIndex="0">{{contactUnavailableText}}</label>
+                <br><br>
+                <!--for non NRP-->
+                <p-dropdown tabIndex="0" *ngIf="!isInterviewTypeNRP" optionLabel="text" [options]="unAvailableOptions"
+                  [style]="{ width: '50%', 'min-width': '50%' }" appendTo="body"
+                  [(ngModel)]="selectedUnAvailableOptionValue">
+                </p-dropdown>
+
+                <!--for NRP-->
+                <p-dropdown tabIndex="0" *ngIf="isInterviewTypeNRP" optionLabel="text" [options]="unAvailableNRPOptions"
+                  [style]="{ width: '50%', 'min-width': '50%' }" appendTo="body"
+                  [(ngModel)]="selectedUnAvailableNRPOptionValue">
+                </p-dropdown>
+              </div>
+            </div>
+          </pe-step>
+
+          <!--wizard panel 7-->
+          <pe-step label="End Interview">
+            <div class="p-grid">
+              <div #endInterview class="p-col-12">
+                <label tabIndex="0">Select an option and click Done to complete interview.</label>
+
+                <div class="p-grid">
+                  <div class="p-col-4">
+                  </div>
+                  <div class="p-col-4">
+                    <p-radioButton tabIndex="0" name="rdEndOptions" (onClick)="onEndOptionsClick()" value="later" label="Complete interview later" [(ngModel)]="selectedEndInterviewOptionValue" inputId="opt1"></p-radioButton>
+                  </div>
+                  <div class="p-col-4">
+                  </div>
+                </div>
+                <div class="p-grid">
+                  <div class="p-col-4">
+                  </div>
+                  <div class="p-col-4">
+                    <p-radioButton tabIndex="0" name="rdEndOptions" (onClick)="onEndOptionsClick()" value="complete" label="Interview is complete" [(ngModel)]="selectedEndInterviewOptionValue" inputId="opt2"></p-radioButton>
+                  </div>
+                  <div class="p-col-4">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </pe-step>
+
+        </pe-steps>
+      </div>
+
+      <!--Help-->
+      <div class="p-col-3">
+        <br>
+        <p-fieldset id="rolloverfieldset">
+          <p-header title="Interview wizard help links section" class="rolloverTextHeader">Help</p-header>
+          <div class="p-grid">
+            <div tabIndex="0" class="p-col-6">
+             {{urlText}}:
+            </div>
+            <div tabIndex="0" title="URL link" class="p-col-4">
+              {{urlLink}}
+            </div>
+          </div>
+          <div class="p-grid">
+            <div  tabIndex="0" class="p-col-6">
+             {{helpText}}:
+            </div>
+            <div  tabIndex="0" title="help link" class="p-col-4">
+              {{helpLine}}
+            </div>
+          </div>
+          <div class="p-grid">
+            <div  tabIndex="0" class="p-col-6">
+              Number of Missing Months:
+            </div>
+            <div  tabIndex="0" title="number of missing months" class="p-col-4">
+              {{numberOfMissingMonths}}
+            </div>
+          </div>
+          <div class="p-grid">
+            <div  tabIndex="0" class="p-col-6">
+              Number of Calls Placed:
+            </div>
+            <div  tabIndex="0" title="calls placed" class="p-col-4">
+              {{callsPlaced}}
+            </div>
+          </div>
+          <div class="p-grid">
+            <div  tabIndex="0" class="p-col-6">
+              Last Call:
+            </div>
+            <div  tabIndex="0" title="last call date" class="p-col-4">
+              {{lastCallDate}}
+            </div>
+          </div>
+
+        </p-fieldset>
+
+      </div>
+    </div>
+  </p-accordionTab>
+</p-accordion>
+
+<div class="loading-indicator" *ngIf="loading$ | async">
+  <p-progressSpinner></p-progressSpinner>
+</div>
+
+
+
+
