@@ -1,0 +1,15 @@
+<fsms-tcw-case-toolbar [ForCaseCollection]=true [ForCaseList]=false [ForReadOnlyCase]="isReadOnlyCase"></fsms-tcw-case-toolbar>
+
+<p-scrollPanel styleClass="tcwcollectionpanel">
+   <!--we want collection tab to show by default like the old application-->
+   <p-tabMenu [model]="tabMenuItems"></p-tabMenu>
+
+   <router-outlet></router-outlet>
+</p-scrollPanel>
+
+<!-- <div class="loading-indicator" *ngIf="caseDetailsSaving$ | async">
+  <p-progressSpinner></p-progressSpinner>
+</div> -->
+
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000"></p-confirmDialog>
+

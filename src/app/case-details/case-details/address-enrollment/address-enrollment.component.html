@@ -1,0 +1,148 @@
+<br>
+<div class="container">
+    <div [style.height.vh]="77">
+      <!-- left divider section-->
+        <as-split unit="percent" gutterStep="10" gutterSize="15"
+        direction="horizontal">
+            <as-split-area size="63">
+                <div class="p-grid">
+                    <div class="p-col-12">
+                    <p-panel class="tcw-ae-panelheader">
+                        <p-header>
+                            <div class="p-col-12">
+                                <fsms-tcw-case-header [surveyId]="surveyId" [caseDetails$]="caseDetails$"></fsms-tcw-case-header>
+                            </div>
+                        </p-header>
+
+                         <!-- priority complete dropdown and button-->
+                        <div *ngIf="surveyId === surveyIds.J">
+                            &nbsp;&nbsp;&nbsp;Priority
+                            <select title="Priority" [(ngModel)]="caseDetails.PRIORITY" (change)="onPriorityChanged()">
+                                <option *ngFor="let priorityType of priorityTypes" value={{priorityType.code}}>
+                                    {{priorityType.code}}&nbsp;&nbsp;&nbsp;{{priorityType.name}}
+                                </option>
+                            </select>
+                            &nbsp;&nbsp;
+                            <button title="Priority Complete"
+                            class="ui-button-raised ui-button-secondary" accesskey="y" pButton type="button" (click)="onPriorityCompleteClick()"
+                            label="Priority&#818; Complete">
+                            </button>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+
+                      <div *ngIf="!(unitGridZoomed$ | async)">
+                        <!-- primary and secondary tabs and hide when unit grid zoomed -->
+                        <div class="p-col-12">
+                            <fsms-tcw-contact-details #contactDetails [surveyId]="surveyId" [caseDetails]="caseDetails" (canCompletePrimaryAddressRefinementChanged)="onCanCompleteAddressRefinementChanged($event)" (caseDetailsChanged)="onCaseDetailsChanged()"></fsms-tcw-contact-details>
+                        </div>
+                        <div class="p-col-12" [style.margin-left.px]="20" *ngIf="caseDetails.REPT_MODE === 'A'">
+                          <button *ngIf="caseDetails.REPT_MODE === 'A' && !isReadOnlyCase" icon="fas fa-check" title="Complete Address Refinement"
+                              class="ui-button-default" accesskey="a" pButton type="button" (click)="completeAddressRefinement(false)"
+                              [disabled]="!canCompleteAddressRefinement" label="Complete A&#818;ddress Refinement">
+                          </button>
+                          &nbsp;
+                          <button *ngIf="caseDetails.REPT_MODE === 'A' && !isReadOnlyCase" icon="fas fa-check" title="Complete Address Refinement and Close"
+                              class="ui-button-default" accesskey="r" pButton type="button" (click)="completeAddressRefinement(true)"
+                              [disabled]="!canCompleteAddressRefinement" label="Complete Address R&#818;efinement and Close">
+                          </button><br>
+                          <label *ngIf="!canCompleteAddressRefinement" [style.margin-left.px]="5"  class="screeningtext-pink" tabIndex="0">
+                            Address Refinement Disabled - Case Primary Phone, Address, City, State, Zip must be completed
+                          </label>
+                        </div>
+                        <div class="p-col-12" [style.margin-left.px]="20" *ngIf="caseDetails.REPT_MODE === 'E'">
+                          <button *ngIf="caseDetails.REPT_MODE === 'E' && !isReadOnlyCase" icon="fas fa-check" title="Complete Enrollment"
+                              class="ui-button-default" accesskey="e" pButton type="button" (click)="completeEnrollment(false)"
+                              [disabled]="!canCompleteEnrollment" label="Complete E&#818;nrollment">
+                          </button>
+                          &nbsp;
+                          <button *ngIf="caseDetails.REPT_MODE === 'E' && !isReadOnlyCase" icon="fas fa-check" title="Complete Enrollment and Close"
+                              class="ui-button-default" accesskey="m" pButton type="button" (click)="completeEnrollment(true)"
+                              [disabled]="!canCompleteEnrollment" label="Complete Enrollm&#818;ent and Close">
+                          </button><br>
+                          <label *ngIf="!canCompleteEnrollment && surveyId === surveyIds.C && !isReadOnlyCase" class="screeningtext-pink" [style.margin-left.px]="5" tabIndex="0">
+                                Enrollment Disabled - All units must have non-zero disposition code to complete enrollment
+                          </label>
+                            <label *ngIf="!canCompleteEnrollment && surveyId === surveyIds.J && !isReadOnlyCase" class="screeningtext-pink" [style.margin-left.px]="5" tabIndex="0">
+                                Enrollment Disabled - All units must have disposition code 99 to complete enrollment
+                            </label>
+                        </div>
+                      </div>
+
+                    </p-panel >
+                    </div>
+
+                    <!-- unit grid -->
+                    <div class="p-col-12">
+                        <p-accordion [multiple]="true" (onClose)="onTabClose($event)" (onOpen)="onTabOpen($event)">
+                            <p-accordionTab [selected]="true" header="Unit Grid">
+                              <div class="p-grid">
+                                <div class="p-col-12">
+                                  <fsms-tcw-unit-grid [surveyId]="surveyId" [caseDetails]="caseDetails" [rowGroupMetaData]="unitRowGroupMetaData"
+                                  [scrollHeight]="unitGridScrollHeight" [unitList$]="unitList$" [showAggregation]="showAggregation"
+                                  (selectedUnitChanged)="selectedUnitChanged($event)" (showAggregationChanged)="onShowAggregationChanged($event)"
+                                  (makeUnitsSingle)="onMakeUnitsSingle($event)" (aggregateUnits)="onAggregateUnits($event)"></fsms-tcw-unit-grid>
+                                </div>
+
+                              </div>
+                            </p-accordionTab>
+                        </p-accordion>
+                    </div>
+                </div>
+            </as-split-area>
+
+            <!-- right divider section -->
+            <as-split-area size="37">
+                <div class="p-grid ">
+                    <p-panel [style.width.vw]="85" header="Unit-Level Info">
+                        <div class="p-col-12">
+                            <fsms-tcw-unit-header [surveyId]="surveyId" [unitDetails]="selectedUnit" [isAddressEnrollmentMode]="caseDetails.REPT_MODE === 'A' || caseDetails.REPT_MODE === 'E'"
+                            (dispCodeChanged)="dispCodeChanged($event)" (dispCodeAssignedAllUnits)="dispCodeAssignedAllUnits($event)"></fsms-tcw-unit-header>
+                        </div>
+
+                        <div class="p-col-12">
+                            <p-accordion [multiple]="true"  (onOpen)="onUnitTabOpen($event)">
+                                <p-accordionTab [(selected)]="isPrimaryAddressOpen" header="Location Address">
+                                    <fsms-tcw-unit-primary-address [surveyId]="surveyId" [unitDetails]="selectedUnit" (unitDetailsChanged)="onUnitDetailsChanged()"></fsms-tcw-unit-primary-address>
+                                </p-accordionTab>
+                                <p-accordionTab [(selected)]="isQuiDataOpen" [header]="quiDataHeader">
+                                  <fsms-tcw-qui-data [surveyId]="surveyId" [quiMonths]="unitQuiMonths" [annAvgAE]="unitQuiAnnAvgAE" [isNce]="unitIsNce" [uiPhone]="unitUiPhone"></fsms-tcw-qui-data>
+                              </p-accordionTab>
+                                <p-accordionTab [(selected)]="isUnitAddressesOpen" header="Unit Addresses">
+                                    <fsms-tcw-unit-addresses [surveyId]="surveyId" [physicalAddress]="unitPhysicalAddress" [uiTaxAddress]="unitUiTaxAddress" [moaAddress]="unitMoaAddress"></fsms-tcw-unit-addresses>
+                                </p-accordionTab>
+                                <p-accordionTab header="Important Dates">
+                                    <fsms-tcw-important-dates [surveyId]="surveyId" [unitDetails]="selectedUnit" [caseDetails]="caseDetails"></fsms-tcw-important-dates>
+                                </p-accordionTab>
+                                <p-accordionTab header="Tax ID Information">
+                                    <fsms-tcw-tax-info [surveyId]="surveyId" [unitDetails]="selectedUnit" [dateVerifyUI]="dateVerifyUi$ | async" (unitDetailsChanged)="onUnitDetailsChanged()"></fsms-tcw-tax-info>
+                                </p-accordionTab>
+                                <p-accordionTab header="Historical Info (Case Level)" [hidden]="surveyId == surveyIds.J">
+                                    <fsms-tcw-historical-info [surveyId]="surveyId" [historicalInfo$]="historicalInfo$"></fsms-tcw-historical-info>
+                                </p-accordionTab>
+                                <p-accordionTab header="Other Info">
+                                    <fsms-tcw-other-info [surveyId]="surveyId" [unitDetails]="selectedUnit"></fsms-tcw-other-info>
+                                </p-accordionTab>
+
+                                <p-accordionTab [selected]="false" header="Case-Level Details">
+                                  <div class="p-grid">
+                                      <div class="p-col-12">
+                                          <fsms-tcw-package-notice #packageNotice [surveyId]="surveyId" [caseDetails]="caseDetails" [refCodeDisabled]="caseRefCodeDisabled" (caseDetailsChanged)="onCaseDetailsChanged()" (refCodeChanged)="onCaseRefCodeChanged()"></fsms-tcw-package-notice>
+                                      </div>
+
+                                  </div>
+                                </p-accordionTab>
+                            </p-accordion>
+                        </div>
+                    </p-panel>
+                </div>
+            </as-split-area>
+        </as-split>
+    </div>
+
+</div>
+
+<div class="loading-indicator" *ngIf="loading$ | async">
+    <p-progressSpinner></p-progressSpinner>
+</div>
