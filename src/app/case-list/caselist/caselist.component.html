@@ -1,0 +1,117 @@
+<fsms-tcw-case-toolbar [ForCaseCollection]=false [ForCaseList]=true></fsms-tcw-case-toolbar>
+
+<div class="center-panel">
+    <p-panel [showHeader]="true" class="caselist-panel">
+        <p-header>Case List</p-header>
+        <button pButton type="button" (click)='fetchFreshData()' [class]="refreshButtonClass$ | async"
+            icon="fa fa-retweet" accesskey="R" role="button" label="Refr&#818;esh Case List">
+        </button>
+        <br />
+        <br />
+        <fsms-tcw-datarefresh-timeout-bar></fsms-tcw-datarefresh-timeout-bar>
+        <p-tabView (onChange)="onTabViewChange($event)" [activeIndex]="activeTabIndex" tabindex="0">
+            <p-tabPanel [header]="headers[gridTypes.Scheduled]" tabindex="0">
+                <ng-template pTemplate="content">
+                    <fsms-tcw-case-list-grid [surveyId]="surveyId" [gridType]="gridTypes.Scheduled">
+                    </fsms-tcw-case-list-grid>
+                </ng-template>
+            </p-tabPanel>
+            <p-tabPanel [header]="headers[gridTypes.Unscheduled]" tabindex="0">
+                <ng-template pTemplate="content">
+                    <fsms-tcw-case-list-grid [surveyId]="surveyId" [gridType]="gridTypes.Unscheduled">
+                    </fsms-tcw-case-list-grid>
+                </ng-template>
+            </p-tabPanel>
+
+
+            <p-tabPanel [header]="headers[gridTypes.Edit]" *ngIf="surveyId =='J'">
+                <ng-template pTemplate="content">
+                    <fsms-tcw-case-list-grid [surveyId]="surveyId" [gridType]="gridTypes.Edit">
+                    </fsms-tcw-case-list-grid>
+                </ng-template>
+            </p-tabPanel>
+            <p-tabPanel [header]="headers[gridTypes.Parked]" *ngIf="surveyId == 'J' && isAdmin">
+                <ng-template pTemplate="content">
+                    <fsms-tcw-case-list-grid [surveyId]="surveyId" [gridType]="gridTypes.Parked">
+                    </fsms-tcw-case-list-grid>
+                </ng-template>
+            </p-tabPanel>
+        </p-tabView>
+
+
+
+
+
+        <div class="p-grid">
+            <div class="p-col-12" style="padding-left: 3px; padding-right:0px">
+                <ul class="legend" style="padding-left: 0px; padding-right: 0px" *ngIf="surveyId == 'C'; else jolts">
+                    <li>
+                        <span class="badge badge-success">1</span><label class="legendText"
+                            style="padding-right: 20px !important">
+                            -Green (Collected/Good, RC 90)</label>
+                    </li>
+                    <li>
+                        <span class="badge badge-danger">2</span><label class="legendText"
+                            style="padding-right: 20px !important"> -Red (Not Collected RC 00-09, 81-82)</label>
+                    </li>
+                    <li>
+                        <span class="badge badge-warning">3</span><label class="legendText"
+                            style="padding-right: 20px !important"> -Yellow (Edit Failure RC 10-17)</label>
+                    </li>
+                    <li>
+                        <span class="badge badge-primary">4</span><label class="legendText"
+                            style="padding-right: 20px !important">
+                            -Blue (Refusal RC 20-30, 39)</label>
+                    </li>
+                    <li>
+                        <span class="badge badge-dark">5</span><label class="legendText"
+                            style="padding-right: 20px !important">
+                            -Black (Inactive RC 40, 50-59, 70-74)</label>
+                    </li>
+                </ul>
+                <ng-template #jolts>
+                    <ul class="legend" style="padding-left: 0px; padding-right: 0px">
+                        <li>
+                            <span class="badge badge-success">1</span><label class="legendText"> -Green (Collected/Good,
+                                RC
+                                90, 91,
+                                99)</label>
+                        </li>
+                        <li>
+                            <span class="badge badge-danger">2</span><label class="legendText"> -Red (Not Collected RC
+                                00-09,
+                                81-82)</label>
+                        </li>
+                        <li>
+                            <span class="badge badge-warning">3</span><label class="legendText"> -Yellow (Pending RC
+                                10-19)</label>
+                        </li>
+                        <li>
+                            <span class="badge badge-dark">4</span><label class="legendText"> -Black (Inactive RC
+                                20-30,
+                                39, 40,
+                                50-59, 70-74)</label>
+                        </li>
+                        <li>
+                            <span class="badge badge-primary">5</span><label class="legendText"> -Blue (Unable to
+                                Continue
+                                RC
+                                83-85)</label>
+                        </li>
+                    </ul>
+                </ng-template>
+            </div>
+        </div>
+
+        <!-- <p-footer>
+            <button pButton type="button" icon="pi pi-plus" label="New" class="ui-button-info"
+                style="margin-right: .25em"></button>
+            <button pButton type="button" icon="pi pi-search" label="View" class="ui-button-success"></button>
+
+        </p-footer> -->
+
+
+
+    </p-panel>
+
+</div>
