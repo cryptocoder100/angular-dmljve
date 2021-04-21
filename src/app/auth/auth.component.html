@@ -1,0 +1,61 @@
+<br><br>
+
+
+<div *ngIf="!termsAccepted" class="termsConditionOuterDiv">
+  <div class="termsConditionDiv"><b>Terms and Conditions of Use</b>
+    <div class="termsConditionWarningText">
+      <b>WARNING!</b>&nbsp;&nbsp;
+      <span>You are using an official United States Government System, which may be used only for authorized purposes.
+        Unauthorized modification of any information stored on this system may result in criminal prosecution. The Government may monitor and audit the usage of this system, and all persons
+        are hereby notified that the use of this system constitutes consent to such monitoring and auditing. Unauthorized attempts to upload information and/or change information on these web sites
+        are strictly prohibited and are subject to prosecution under the Computer Fraud and Abuse Act of 1986 and Title 18 U.S.C. Sec. 1001 and 1030.
+      </span>
+      <div class="IAcceptBtn">
+          <button pButton type="button" class="ui-button-danger" #acceptButton icon="fas fa-user-check" label="I Accept" (click)="acceptTerms()"
+          title="Warning! You are using an official United States Government System, which may be used only for authorized purposes.
+          Unauthorized modification of any information stored on this system may result in criminal prosecution. The Government may monitor and audit the usage of this system, and all persons
+          are hereby notified that the use of this system constitutes consent to such monitoring and auditing. Unauthorized attempts to upload information and/or change information on these web sites
+          are strictly prohibited and are subject to prosecution under the Computer Fraud and Abuse Act of 1986 and Title 18 U.S.C. Sec. 1001 and 1030.  I Accept">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="termsAccepted" class="p-grid">
+  <div class="p-col-2"></div>
+  <div class="p-col-7">
+    <p-panel [showHeader]=true header="Welcome to TopCATI Web Project.">
+      <b>Welcome to TopCATIWeb</b><br><br>
+    </p-panel>
+
+    <div *ngIf="isLoggedIn">
+      <h1>Logged In!</h1>
+      <button pButton type="button" class="ui-button-default" label="Logout" (click)="doLogout()">
+      </button>
+    </div>
+    <div *ngIf="!isLoggedIn && isLoggingIn">
+      <h1>Logging in to TCW...</h1>
+    </div>
+    <div *ngIf="!isLoggedIn && !isLoggingIn && isLoginFailed">
+      <h1>Authentication Failed</h1>
+      <button pButton type="button" class="ui-button-default" label="Retry Login" (click)="doLogin()">
+      </button>
+    </div>
+    <div *ngIf="!isLoggedIn && !isLoggingIn && !isLoginFailed && hasPreviousLogin">
+      <h1>You are already logged in</h1>
+      <button pButton type="button" class="ui-button-default" label="Logout" (click)="doLogout()">
+      </button>
+    </div>
+    <div *ngIf="!isLoggingIn && !isLoggedIn && !hasPreviousLogin && !isLoginFailed">
+      <h1>You have logged out</h1>
+      <button pButton type="button" class="ui-button-default" label="Login" (click)="doLogin()">
+      </button>
+    </div>
+
+  </div>
+  <div class="p-col-2"></div>
+
+</div>
+
