@@ -1,4 +1,46 @@
-<hello name="{{ name }}"></hello>
-<p>
-  Start editing to see some magic happen :)
-</p>
+<!--The content below is only a placeholder and can be replaced.-->
+  <div>
+    <fsms-tcw-header></fsms-tcw-header>
+  </div>
+  <div>
+    <fsms-tcw-warning-banner></fsms-tcw-warning-banner>
+  </div>
+
+  <div [@slideInAnimation]="o.isActivated ? o.activatedRoute : ''" class="body-content app">
+      <router-outlet #o="outlet"></router-outlet>
+  </div>
+  <div>
+    <fsms-tcw-footer></fsms-tcw-footer>
+  </div>
+
+<!-- <div *ngIf="dialogProps$ | async as props"> -->
+    <p-dialog *ngIf="dialogProps$ | async as props"
+      header='   '
+        (onShow)="onShowDialog()"
+        [focusOnShow]="false"
+        [showHeader]='props.ShowHeader'
+        [closable]=false
+        [closeOnEscape]=false
+        [dismissableMask]=false
+        [modal]=true
+        [resizable]=true
+        [draggable]=true
+        [class]='props.StyleClass'
+        [styleClass]='props.StyleClass'
+        [positionLeft]='props.PositionLeft'
+        [positionTop]='props.PositionTop'
+        [visible]='props.Show'>
+            <router-outlet name="popup"></router-outlet>
+    </p-dialog>
+<!-- </div> -->
+
+<div class="loading-indicator" *ngIf="loading$ | async">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+
+<div>
+  <fsms-tcw-error-dialog></fsms-tcw-error-dialog>
+</div>
+
+<p-toast [style]="{marginTop: '80px'}"></p-toast>
+<!-- <p-toast [style]="{marginTop: '80px'}" position="top-right" key="tl"></p-toast> -->
