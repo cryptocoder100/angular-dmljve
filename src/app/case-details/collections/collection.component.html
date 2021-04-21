@@ -1,0 +1,48 @@
+<main title="Data Collection" class="container" *ngIf="caseSummary$ | async as caseSummary">
+  <div [style.height.vh]="79">
+    <as-split unit="percent" gutterStep="10" gutterSize="15"
+                  direction="vertical" useTransition="true">
+
+      <!--split area 1-->
+      <as-split-area size="99" order="1" [visible]="only === 1 || only === 0">
+        <p-accordion [multiple]="true">
+          <p-accordionTab [selected]="false" header="Case Details: {{caseSummary.CaseNum}}">
+              <!--case sumamry component-->
+              <!--caseSummary object not passing as an observable since the object value is static through the life time of this page.-->
+              <fsms-tcw-case-summary #caseSummaryElem [CaseSummary]="caseSummary"></fsms-tcw-case-summary>
+          </p-accordionTab>
+          <p-accordionTab [selected]="true" header="Collection Details">
+              <!--micro data section - collection grid -->
+              <fsms-tcw-jolts-microdata-grid *ngIf="!(isCES$ | async)"></fsms-tcw-jolts-microdata-grid>
+              <fsms-tcw-ces-microdata-grid *ngIf="isCES$ | async" ></fsms-tcw-ces-microdata-grid>
+          </p-accordionTab>
+        </p-accordion>
+
+          <!--pullup tab UI to show notes screen in split area 2-->
+          <button accesskey="n" (click)="pullUp()" class="slideOutTab" >{{ only === 1 || only === 0 ?   '&#818;Notes ⬅️' : 'Collection&#818;s ➡'}}</button>
+      </as-split-area>
+
+      <!--split area 2 -->
+      <as-split-area  size="1" order="2" [visible]="only === 2">
+          <!--route teh notes component here-->
+          <router-outlet></router-outlet>
+      </as-split-area>
+    </as-split>
+  </div>
+
+    <!-- Toast for collection page rollover -->
+    <p-toast key="rolloverRemindertoast" position="top-right"></p-toast>
+
+     <!-- Toast for collection page dropunit -->
+     <p-toast key="dropUnitRemindertoast" position="top-right">
+      <ng-template let-message pTemplate="message">
+          <p innerHtml="{{message.detail}}"></p>
+      </ng-template>
+  </p-toast>
+</main>
+
+
+
+
+
+

@@ -1,0 +1,833 @@
+<!-- CES -->
+
+  <!--micro grid header-->
+  <div role="cell" tabIndex="0" style="display: flex;">
+    <h4 role="label" tabIndex="0" class="collection-header-margin">Collection: </h4>
+    <h4 role="label" tabIndex="0" class="collection-entry-header collection-header-margin">
+      Select {{selectedIndex}} of {{(unitsCount$ | async)}} Unit(s)
+    </h4>
+  </div>
+
+  <!--ONLY purpose of this HTML element isthat the SCreen reader can read the cell transcripts correctly-->
+  <!-- <p id="joltsTranscriptText" [attr.aria-label]=" 'Error Transcript is ' + (errorTranscript$ | async) + ' ' + (selectedDataEntryCellTranscriptAccessbilityText$ | async)"></p> -->
+  <!--styled header-->
+  <hr>
+  <!--Interview wizard-->
+  <fsms-tcw-interview-wizard *ngIf="showInterviewWizard"></fsms-tcw-interview-wizard>
+  <br>
+  <!--interview script text areas-->
+  <!-- <div class="ui-g-12 ui-md-12" > -->
+    <div class="p-grid">
+      <div class="p-col-6">
+        <fieldset id="interviewScriptsFieldSet">
+          <legend class="tcw-collection-field-legend">Transcripts</legend>
+          <!--interview scripts-->
+          <p id="interviewScriptText" [attr.aria-label]="currentaSelectedDataEntryCellAccessbilityName + ' value is ' + currentSelectedDataEntryValueForAccessbility + '. The Transcript is ' + (interviewTranscriptText$ | async)">{{ interviewTranscriptText$ | async}}</p>
+        </fieldset>
+      </div>
+      <div class="p-col-6">
+        <fieldset id="errorScriptsFieldset">
+          <legend class="tcw-collection-field-legend">Error Transcripts</legend>
+          <!--error scripts-->
+          <!-- <p>{{errorMessage$ | async}}</p> -->
+          <p id="interviewErrorScriptText">{{ errorTranscript$ | async}}</p>
+          <button type="text" *ngIf="showScreeningParamsBtn$ | async" pButton label="More Info" (click)="op1.toggle($event)"></button>
+          <!--simple overlay panel to show screening param values-->
+
+          <p-overlayPanel #op1  [appendTo]="'body'" [style]="{width: '500px', height: '479px'}">
+            <ng-template pTemplate>
+              <div *ngIf="selectedScreeningParams$ | async as selectedScreeningParams">
+                <h3 class="batch-entry-header">More Information</h3>
+                <hr>
+
+                <div class="p-grid">
+                  <div class="p-col-6">
+                    NAICS Code: <b>{{ selectedScreeningParams.NaicsCode }}</b>
+                  </div>
+                  <div class="p-col-6">
+                    Size: <b>{{ selectedScreeningParams.SizeCode }}</b>
+                  </div>
+                  <div class="p-col-6">
+                    AE-Chg: <b>{{ selectedScreeningParams.AeChange }}</b>
+                  </div>
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': AHEselectedError, 'screeningtext-regular': !AHEselectedError}">
+                    AHE-AE-Chg: <b>{{ selectedScreeningParams.AheAeChange }}</b>
+                  </div>
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': AHEselectedError, 'screeningtext-regular': !AHEselectedError}">
+                    AHE-AE-Max: <b>{{ selectedScreeningParams.AheAeMax }}</b>
+                  </div>
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': AHEselectedError, 'screeningtext-regular': !AHEselectedError}">
+                    AHE-AE-Min: <b>{{ selectedScreeningParams.AheAeMin }}</b>
+                  </div>
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': PWAHEselectedError, 'screeningtext-regular': !PWAHEselectedError}">
+                    AHE-PW-Chg: <b>{{ selectedScreeningParams.AhePwChange }}</b>
+                  </div>
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': PWAHEselectedError, 'screeningtext-regular': !PWAHEselectedError}">
+                    AHE-PW-Max: <b>{{ selectedScreeningParams.AhePwMax }}</b>
+                  </div>
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': PWAHEselectedError, 'screeningtext-regular': !PWAHEselectedError}">
+                    AHE-PW-Min: <b>{{ selectedScreeningParams.AhePwMin }}</b>
+                  </div>
+
+
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': AOTselectedError, 'screeningtext-regular': !AOTselectedError}">
+                    AOT-AE-Chg: <b>{{ selectedScreeningParams.AotAeChange }}</b>
+                  </div>
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': AOTselectedError, 'screeningtext-regular': !AOTselectedError}">
+                    AOT-AE-Max: <b>{{ selectedScreeningParams.AotAeMax }}</b>
+                  </div>
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': AOTselectedError, 'screeningtext-regular': !AOTselectedError}">
+                    AOT-PW-Chg: <b>{{ selectedScreeningParams.AotPwChange }}</b>
+                  </div>
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': AWHselectedError, 'screeningtext-regular': !AWHselectedError}">
+                    AWH-AE-Chg: <b>{{ selectedScreeningParams.AwhAeChange }}</b>
+                  </div>
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': AWHselectedError, 'screeningtext-regular': !AWHselectedError}">
+                    AWH-AE-Max: <b>{{ selectedScreeningParams.AwhAeMax }}</b>
+                  </div>
+
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': AWHselectedError, 'screeningtext-regular': !AWHselectedError}">
+                    AWH-AE-Min: <b>{{ selectedScreeningParams.AwhAeMin }}</b>
+                  </div>
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': PWAWHselectedError, 'screeningtext-regular': !PWAWHselectedError}">
+                    AWH-PW-Chg: <b></b> <!--TODO findout why there is not value for here-->
+                  </div>
+                  <div class="p-col-6"
+                  [ngClass]="{'screeningtext-pink': PWAWHselectedError, 'screeningtext-regular': !PWAWHselectedError}">
+                    AWH-PW-Max : <b>{{ selectedScreeningParams.AwhPwMax }}</b>
+                  </div>
+                  <div class="p-col-6"
+                  [ngClass]="{'screeningtext-pink': PWAWHselectedError, 'screeningtext-regular': !PWAWHselectedError}">
+                    AWH_PW-Min: <b>{{ selectedScreeningParams.AwhPwMin }}</b>
+                  </div>
+
+
+
+                  <div class="p-col-6">
+                    GME-Chg : <b>{{ selectedScreeningParams.GmeChange }}</b>
+                  </div>
+
+                  <div class="p-col-6"
+                   [ngClass]="{'screeningtext-pink': PWAEselectedError, 'screeningtext-regular': !PWAEselectedError}">
+                    PW-AE-Chg : <b>{{ selectedScreeningParams.PwAEChange }}</b>
+                  </div>
+
+                  <div class="p-col-6"
+                  [ngClass]="{'screeningtext-pink': PWAEselectedError, 'screeningtext-regular': !PWAEselectedError}">
+                    PW-AE-Max: <b>{{ selectedScreeningParams.PwAeMax }}</b>
+                  </div>
+
+                  <div class="p-col-6"
+                  [ngClass]="{'screeningtext-pink': PWAEselectedError, 'screeningtext-regular': !PWAEselectedError}">
+                    PW-AE-Min: <b>{{ selectedScreeningParams.PwAeMin }}</b>
+                  </div>
+
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': WWAEselectedError, 'screeningtext-regular': !WWAEselectedError}">
+                    WW-AE-Chg: <b>{{ selectedScreeningParams.WwAeChange }}</b>
+                  </div>
+                  <div class="p-col-6"
+                    [ngClass]="{'screeningtext-pink': WWAEselectedError, 'screeningtext-regular': !WWAEselectedError}">
+                    WW-AE-Max: <b>{{ selectedScreeningParams.WwAeMax }}</b>
+                  </div>
+                  <div class="p-col-6"
+                  [ngClass]="{'screeningtext-pink': WWAEselectedError, 'screeningtext-regular': !WWAEselectedError}">
+                    WW-AE-Min: <b>{{ selectedScreeningParams.WwAeMin }}</b>
+                  </div>
+                </div>
+
+              </div>
+
+
+
+            </ng-template>
+          </p-overlayPanel>
+
+
+
+        </fieldset>
+      </div>
+    </div>
+  <!-- </div> -->
+
+
+  <!--main - data grid panel-->
+  <p-scrollPanel title="Start Data Collection" styleClass="tcw-microdata-scrollpanel" id="cesmicrodata">
+      <p-table [columns]="scrollableCols" [value]="cesMicroDataAePwRows" *ngIf="showMicroDataGridOnGoodDC$ | async"
+          selectionMode="single" dataKey="RefMM" role="table" aria-label="Data Collection Table"
+          [scrollable]="true" scrollHeight="100%" [loading]="datagridLoading"
+          styleClass="microdatacustom tcw-microdata-header tcw-microdata-header-row">
+        <!-- <caption [ngStyle]="{display: 'none'}">Data Collection table</caption> -->
+        <!--Toolbar in caption section-->
+        <ng-template pTemplate="caption">
+          <fsms-tcw-microdata-grid-toolbar (loading)='setOnLoading($event)' (selectedIndexValueChanged)='onValueChanged($event)'></fsms-tcw-microdata-grid-toolbar>
+
+        </ng-template>
+
+
+
+        <!--grid column headers-->
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+              <th scope="col" *ngFor="let col of columns"  [ngStyle]="{'width': col.width}" [ngClass]="{'tcw-microdata-ratio-header': col.IsRatioHeader}">
+                {{col.header}}
+              </th>
+          </tr>
+        </ng-template>
+
+        <!-- Grid body Section-->
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-columns="columns">
+
+          <!--class="batchdata-entry-row"-->
+          <tr [ngClass]="{'tcw-microdata-ratio-row': rowData.Label === 'PW', 'tcw-microdata-row': rowData.Label === 'AE'}" tabindex="0">
+
+            <td *ngIf="rowGroupMetaData[rowData.RefMMYY].index === rowIndex" tabIndex="0" role="cell" styleClass="microdata-month-cell"
+              [ngStyle]="{'width': '3.7em'}" class="microdatagrid-month-seperation-line"
+                      [attr.rowspan]="rowGroupMetaData[rowData.RefMMYY].size">
+                <b>{{rowData.RefMM}}/{{rowData.RefYY}}</b>
+            </td>
+
+            <td  [ngStyle]="{'width': '2.5em'}" *ngIf="rowData.RowType === 'AE'" role="cell">
+              {{rowData.RowType}}
+            </td>
+
+            <td [ngStyle]="{'width': '2.5em'}"  *ngIf="rowData.RowType === 'PW'" role="cell" class="microdatagrid-month-seperation-line">
+              {{rowData.RowType}}
+            </td>
+
+            <!--AE-->
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'AE'" class="cell-parent">
+              <input width="100%" #beginCollectionFocusElement tabindex="0" pTooltip={{rowData.TotalWorkers}} id="aeCell{{rowIndex}}"
+                     tooltipPosition="top" aria-labelledby="rowData.MicroDataCellContextError.isTotalWorkersMissing ? interviewErrorScriptText : interviewScriptText"
+                     (click)='updateMicroRatios({nextCellName: "aeCell", cellName : "AE", rowNumber: rowIndex, rowType: "AE", cellValue: rowData.TotalWorkers, month: rowData.RefMM, year: rowData.RefYY })'
+                    (focus)='onFocus({cellNameForAccessibility: "Total Employees", cellName : "AE", cellValue: rowData.TotalWorkers, IsRatioCell: false, rowType: "AE", month: rowData.RefMM, year: rowData.RefYY })'
+                    (keydown.Tab)='updateMicroRatios({nextCellName: "wwCell", cellName : "AE", rowNumber: rowIndex, rowType: "AE", cellValue: rowData.TotalWorkers, month: rowData.RefMM, year: rowData.RefYY })'
+                    [ngClass]="{'micro-cell-otm-error': rowData.MicroDataRatioOtmContextError.isOtmTotalWorkerError || rowData.MicroDataRatioOtmContextError.isAeLdbTestError,
+                                'microdata-cell-noerror': !rowData.MicroDataRatioOtmContextError.isOtmTotalWorkerError && !rowData.MicroDataCellContextError.isTotalWorkersMissing && !rowData.MicroDataRatioOtmContextError.isAeLdbTestError,
+                                'microdata-cell-error': rowData.MicroDataCellContextError.isTotalWorkersMissing}"
+                    pInputText type="text" [pKeyFilter]="noCharInputRegExOnMultiPay$ | async" maxlength="7" class="custom-edit-control cell-input-text"
+                    [(ngModel)]="rowData.TotalWorkers">
+            </td>
+
+            <!--PW-->
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'PW'" role="cell" class="cell-parent microdatagrid-month-seperation-line">
+              <input  width="100%" #begin tabindex="0" pTooltip={{rowData.TotalNonSupervisoryWokers}} tooltipPosition="top" id="pwCell{{rowIndex}}"
+                    #pwCell
+                    [disabled]="rowData.DisallowPwCellDataCollection" aria-labelledby="interviewScriptText"
+                    (click)='updateMicroRatios({nextCellName: "pwCell", rowNumber: rowIndex, cellName : "PW", rowType: "PW", cellValue: rowData.TotalNonSupervisoryWokers, month: rowData.RefMM, year: rowData.RefYY })'
+                    (focus)='onFocus({cellNameForAccessibility: "Total Non Supervisory Workers", rowType: "PW", IsRatioCell: false, cellName : "PW", month: rowData.RefMM, year: rowData.RefYY })'
+                    (keydown.Tab)='updateMicroRatios({nextCellName: "pwprCell", rowNumber: rowIndex, cellName : "PW", rowType: "PW", cellValue: rowData.TotalNonSupervisoryWokers, month: rowData.RefMM, year: rowData.RefYY })'
+                    [ngClass]="{'nonEditable': rowData.DisallowPwCellDataCollection,
+                                'microdata-cell-error': rowData.MicroDataCellContextError.isTotalNonSupervisoryWokersMissing,
+                                'micro-cell-otm-error': rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerError,
+                                'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalNonSupervisoryWokersMissing && !rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerError}"
+                    pInputText type="text" [pKeyFilter]="noCharInputRegExOnMultiPay$ | async" maxlength="7" class="custom-edit-control cell-input-text"
+                    [(ngModel)]="rowData.TotalNonSupervisoryWokers">
+            </td>
+
+            <!--WW-->
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'AE'" role="cell" class="cell-parent">
+              <input width="100%" #begin tabindex="0" pTooltip={{rowData.TotalWomenWorkers}} aria-labelledby="interviewScriptText" tooltipPosition="top"
+                    #wwCell id="wwCell{{rowIndex}}"
+                    (click)='updateMicroRatios({nextCellName: "wwCell", rowNumber: rowIndex, cellName : "WW", rowType: "AE", cellValue: rowData.TotalWomenWorkers, month: rowData.RefMM, year: rowData.RefYY })'
+                    (focus)='onFocus({cellNameForAccessibility: "Total Women Workers", cellValue: rowData.TotalWomenWorkers, cellName : "WW", IsRatioCell: false, rowType: "AE", month: rowData.RefMM, year: rowData.RefYY })'
+                    (keydown.Tab)='updateMicroRatios({nextCellName: "aeprCell", rowNumber: rowIndex, cellName : "WW", rowType: "AE", cellValue: rowData.TotalWomenWorkers, month: rowData.RefMM, year: rowData.RefYY })'
+                    [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isTotalWomenWorkersMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalWomenWorkersMissing}"
+                    pInputText type="text" [pKeyFilter]="noCharInputRegExOnMultiPay$ | async" maxlength="7" class="custom-edit-control cell-input-text"
+                    [(ngModel)]="rowData.TotalWomenWorkers">
+            </td>
+
+
+
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'PW'" class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line">
+              <img width="100%" src="../../../../assets/shadedbox.PNG">
+            </td>
+
+            <!--AE-PR-->
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'AE'" role="cell" class="cell-parent">
+              <input  #aeprCell width="100%"   id="aeprCell{{rowIndex}}"
+                    tabindex="0" pTooltip={{rowData.TotalWorkerPayrolls}} aria-labelledby="interviewScriptText" tooltipPosition="top"
+                    (click)='updateMicroRatios({nextCellName: "aeprCell", rowNumber: rowIndex, cellName : "AE-PR", rowType: "AE", cellValue: rowData.TotalWorkerPayrolls, month: rowData.RefMM, year: rowData.RefYY })'
+                    [disabled]="rowData.DisallowAeRowDataCollection" name="aepr-prasad"
+                    (focus)='onFocus({cellNameForAccessibility: "Total Worker Payroll", rowType: "AE", IsRatioCell: false, cellName : rowData.RowType === "PW" ? "PW-PR": "AE-PR", month: rowData.RefMM, year: rowData.RefYY})'
+                    (keydown.Tab)='updateMicroRatios({nextCellName: "aecmCell", rowNumber: rowIndex, cellName : "AE-PR", rowType: "AE", cellValue: rowData.TotalWorkerPayrolls, month: rowData.RefMM, year: rowData.RefYY })'
+                    [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isTotalWorkerPayrollsMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalWorkerPayrollsMissing}"
+                    pInputText type="text" [pKeyFilter]="noCharInputRegExOnMultiPay$ | async" maxlength="10" class="custom-edit-control cell-input-text"
+                    [(ngModel)]="rowData.TotalWorkerPayrolls">
+            </td>
+
+            <!--PW-PR-->
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'PW'" role="cell" class="cell-parent microdatagrid-month-seperation-line">
+              <input  width="100%" #begin tabindex="0" pTooltip={{rowData.TotalNonSupervisoryWorkerPayrolls}} aria-labelledby="interviewScriptText" tooltipPosition="top"
+                    #pwprCell id="pwprCell{{rowIndex}}"
+                    [disabled]="rowData.DisallowPwRowDataCollection"
+                    (click)='updateMicroRatios({nextCellName: "pwprCell", rowNumber: rowIndex, cellName : "PW-PR", rowType: "PW", cellValue: rowData.TotalNonSupervisoryWorkerPayrolls, month: rowData.RefMM, year: rowData.RefYY })'
+                    (focus)='onFocus({cellNameForAccessibility: "Total Production Worker Payroll", rowType: "PW", IsRatioCell: false, cellName : rowData.RowType === "PW" ? "PW-PR": "AE-PR", month: rowData.RefMM, year: rowData.RefYY })'
+                    (keydown.Tab)='updateMicroRatios({nextCellName: "pwcmCell", rowNumber: rowIndex, cellName : "PW-PR", rowType: "PW", cellValue: rowData.TotalNonSupervisoryWorkerPayrolls, month: rowData.RefMM, year: rowData.RefYY })'
+                    [ngClass]="{'nonEditable': rowData.DisallowPwRowDataCollection, 'microdata-cell-error': rowData.MicroDataCellContextError.isTotalNonSupervisoryWorkerPayrollsMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalNonSupervisoryWorkerPayrollsMissing}"
+                    pInputText type="text" [pKeyFilter]="noCharInputRegExOnMultiPay$ | async" maxlength="10" class="custom-edit-control cell-input-text"
+                    [(ngModel)]="rowData.TotalNonSupervisoryWorkerPayrolls">
+            </td>
+
+            <!--AE-CM-->
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'AE'" role="cell" class="cell-parent">
+              <input  width="100%" #begin tabindex="0" pTooltip={{rowData.TotalCommisions}} aria-labelledby="interviewScriptText" tooltipPosition="top"
+                    #aecmCell id="aecmCell{{rowIndex}}"
+                    [disabled]="rowData.DisallowAeRowDataCollection"
+                    (click)='updateMicroRatios({nextCellName: "aecmCell", rowNumber: rowIndex, cellName : "AE-CM", rowType: "AE", cellValue: rowData.TotalCommisions, month: rowData.RefMM, year: rowData.RefYY })'
+                    (focus)='onFocus({cellNameForAccessibility: "Total Commissions", rowType: "AE", IsRatioCell: false, cellName : rowData.RowType === "PW" ? "PW-CM": "AE-CM", month: rowData.RefMM, year: rowData.RefYY })'
+                    (keydown.Tab)='updateMicroRatios({nextCellName: "aehrCell", rowNumber: rowIndex, cellName : "AE-CM", rowType: "AE", cellValue: rowData.TotalCommisions, month: rowData.RefMM, year: rowData.RefYY })'
+                    [ngClass]="{'nonEditable': rowData.DisallowAeRowDataCollection, 'microdata-cell-error': rowData.MicroDataCellContextError.isTotalCommisionsMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalCommisionsMissing}"
+                    pInputText type="text" [pKeyFilter]="noCharInputRegExOnMultiPay$ | async" maxlength="8" class="custom-edit-control cell-input-text"
+                    [(ngModel)]="rowData.TotalCommisions">
+            </td>
+
+            <!--PW-CM-->
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'PW'" role="cell" class="cell-parent microdatagrid-month-seperation-line">
+              <input  width="100%" #begin tabindex="0" pTooltip={{rowData.TotalNonSUpervisoryCommisions}} aria-labelledby="interviewScriptText" tooltipPosition="top"
+                    #pwcmCell id="pwcmCell{{rowIndex}}"
+                    [disabled]="rowData.DisallowPwRowDataCollection"
+                    (click)='updateMicroRatios({nextCellName: "pwcmCell", rowNumber: rowIndex, cellName : "PW-CM", rowType: "PW", cellValue: rowData.TotalNonSUpervisoryCommisions, month: rowData.RefMM, year: rowData.RefYY })'
+                    (focus)='onFocus({cellNameForAccessibility: "Total Non Supervisory Commissions", rowType: "PW", IsRatioCell: false, cellName : rowData.RowType === "PW" ? "PW-CM": "AE-CM", month: rowData.RefMM, year: rowData.RefYY })'
+                    (keydown.Tab)='updateMicroRatios({nextCellName: "pwhrCell", rowNumber: rowIndex, cellName : "PW-CM", rowType: "PW", cellValue: rowData.TotalNonSUpervisoryCommisions, month: rowData.RefMM, year: rowData.RefYY })'
+                    [ngClass]="{'nonEditable': rowData.DisallowPwRowDataCollection, 'microdata-cell-error': rowData.MicroDataCellContextError.isTotalNonSUpervisoryCommisionsMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalNonSUpervisoryCommisionsMissing}"
+                    pInputText type="text" [pKeyFilter]="noCharInputRegExOnMultiPay$ | async" maxlength="8" class="custom-edit-control cell-input-text"
+                    [(ngModel)]="rowData.TotalNonSUpervisoryCommisions">
+            </td>
+
+            <!--AE-HR-->
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'AE'" role="cell" class="cell-parent">
+              <input  width="100%" #begin tabindex="0" pTooltip={{rowData.TotalWorkerHours}} aria-labelledby="interviewScriptText" tooltipPosition="top"
+                    #aehrCell  id="aehrCell{{rowIndex}}"
+                    [disabled]="rowData.DisallowAeRowDataCollection"
+                    (click)='updateMicroRatios({nextCellName: "aehrCell", rowNumber: rowIndex+1, cellName : "AE-HR", rowType: "AE", cellValue: rowData.TotalWorkerHours, month: rowData.RefMM, year: rowData.RefYY })'
+                    (focus)='onFocus({cellNameForAccessibility: "Total Worker Hours", rowType: "AE", IsRatioCell: false, cellValue: rowData.TotalWorkerHours, cellName : rowData.RowType === "PW" ? "PW-HR": "AE-HR", month: rowData.RefMM, year: rowData.RefYY })'
+                    (keydown.Tab)='updateMicroRatios({nextCellName: "CC1", rowNumber: rowIndex, cellName : "AE-HR", rowType: "AE", cellValue: rowData.TotalWorkerHours, month: rowData.RefMM, year: rowData.RefYY })'
+                    [ngClass]="{'nonEditable': rowData.DisallowAeRowDataCollection, 'microdata-cell-error': rowData.MicroDataCellContextError.isTotalWorkerHoursMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalWorkerHoursMissing}"
+                    pInputText type="text" [pKeyFilter]="noCharInputRegExOnMultiPay$ | async" maxlength="8" class="custom-edit-control cell-input-text"
+                    [(ngModel)]="rowData.TotalWorkerHours">
+            </td>
+
+            <!--PW-HR-->
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'PW'" role="cell" class="cell-parent microdatagrid-month-seperation-line">
+              <input  width="100%" #begin tabindex="0" pTooltip={{rowData.TotalNonSupervisoryWorkerHours}} aria-labelledby="interviewScriptText" tooltipPosition="top"
+                    #pwhrCell id="pwhrCell{{rowIndex}}"
+                    [disabled]="rowData.DisallowPwRowDataCollection"
+                    (focus)='onFocus({cellNameForAccessibility: "Total Production Worker hours", rowType: "PW", IsRatioCell: false, cellName : rowData.RowType === "PW" ? "PW-HR": "AE-HR", month: rowData.RefMM, year: rowData.RefYY })'
+                    (keydown.Tab)='updateMicroRatios({nextCellName: "aeCell", rowNumber: rowIndex+1, cellName : "PW-HR", rowType: "PW", cellValue: rowData.TotalNonSupervisoryWorkerHours, month: rowData.RefMM, year: rowData.RefYY })'
+                    [ngClass]="{'nonEditable': rowData.DisallowPwRowDataCollection, 'microdata-cell-error': rowData.MicroDataCellContextError.isTotalNonSupervisoryWorkerHoursMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalNonSupervisoryWorkerHoursMissing}"
+                    (click)='updateMicroRatios({nextCellName: "pwhrCell", rowNumber: rowIndex+1, cellName : "PW-HR", rowType: "PW", cellValue: rowData.TotalNonSupervisoryWorkerHours, month: rowData.RefMM, year: rowData.RefYY })'
+                    pInputText type="text" [pKeyFilter]="noCharInputRegExOnMultiPay$ | async" maxlength="7" class="custom-edit-control cell-input-text"
+                    [(ngModel)]="rowData.TotalNonSupervisoryWorkerHours">
+            </td>
+
+            <!--AE-OT-->
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'AE'" role="cell" class="cell-parent">
+              <input  width="100%" #begin tabindex="0" pTooltip={{rowData.TotalOvertime}} aria-labelledby="interviewScriptText" tooltipPosition="top"
+                    #aeotCell id="aeotCell{{rowIndex}}"
+                    [disabled]="rowData.DisallowAeOTDataCollection"
+                    (click)='updateMicroRatios({cellName : "AE-OT", rowNumber: rowIndex, rowType: "AE", cellValue: rowData.TotalOvertime, month: rowData.RefMM, year: rowData.RefYY })'
+                    (focus)='onFocus({cellNameForAccessibility: "Total Over Time", rowType: "AE", IsRatioCell: false, cellName : "AE-OT", month: rowData.RefMM, year: rowData.RefYY })'
+                    (keydown.Tab)='updateMicroRatios({cellName : "AE-OT", rowNumber: rowIndex, rowType: "AE", cellValue: rowData.TotalOvertime, month: rowData.RefMM, year: rowData.RefYY })'
+                    [ngClass]="{'nonEditable': rowData.DisallowAeOTDataCollection, 'microdata-cell-error': rowData.MicroDataCellContextError.isTotalOvertimeMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalOvertimeMissing}"
+                    pInputText type="text" [pKeyFilter]="noCharInputRegExOnMultiPay$ | async" maxlength="7" class="custom-edit-control cell-input-text"
+                    [(ngModel)]="rowData.TotalOvertime">
+            </td>
+
+
+            <!-- <td [ngStyle]="{'width': '4.5em'}" *ngIf="rowData.RowType === 'AE'" class="tcw-microdata-cell-readonly">
+              <img width="100%" src="../../../../assets/shadedbox.PNG">
+            </td> -->
+
+            <!--PW-OT-->
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'PW'" role="cell" class="cell-parent microdatagrid-month-seperation-line">
+              <input  width="100%" #begin tabindex="0" pTooltip={{rowData.TotalNonSupervisoryOvertime}} aria-labelledby="interviewScriptText" tooltipPosition="top"
+                    #pwotCell id="pwotCell{{rowIndex}}"
+                    [disabled]="rowData.DisallowPwOTDataCollection"
+                    (click)='updateMicroRatios({cellName : "PW-OT", rowNumber: rowIndex, rowType: "PW", cellValue: rowData.TotalNonSupervisoryOvertime, month: rowData.RefMM, year: rowData.RefYY })'
+                    (focus)='onFocus({cellNameForAccessibility: "Total Non Supervisory Overtime", rowType: "PW", IsRatioCell: false, cellName : "PW-OT", month: rowData.RefMM, year: rowData.RefYY })'
+                    (keydown.Tab)='updateMicroRatios({cellName : "PW-OT", rowNumber: rowIndex, rowType: "PW", cellValue: rowData.TotalNonSupervisoryOvertime, month: rowData.RefMM, year: rowData.RefYY })'
+                    [ngClass]="{'nonEditable': rowData.DisallowPwOTDataCollection, 'microdata-cell-error': rowData.MicroDataCellContextError.isTotalNonSupervisoryOvertimeMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalNonSupervisoryOvertimeMissing}"
+                    pInputText type="text" [pKeyFilter]="noCharInputRegExOnMultiPay$ | async" maxlength="7" class="custom-edit-control cell-input-text"
+                    [(ngModel)]="rowData.TotalNonSupervisoryOvertime">
+            </td>
+
+            <!-- <td [ngStyle]="{'width': '4.5em'}" *ngIf="rowData.RowType === 'PW'" class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line">
+              <img width="100%" src="../../../../assets/shadedbox.PNG">
+            </td> -->
+
+            <!--cC1-->
+            <td [ngStyle]="{'width': '3.5em'}" pEditableColumn *ngIf="rowData.RowType === 'AE'" pTooltip={{rowData.EmployementShift1?.text}} tooltipPosition="top">
+              <!-- <select class="collection-select" [ngModel]="rowData.EmployementShift1" tabindex="0" id="CC1{{rowIndex}}" appendTo="body" aria-labelledby="interviewScriptText"
+              (change)='onExplanationComment1Changed({nextCellName: "CC1", rowNumber: rowIndex, cellName : "PW-HR", rowType: "AE", cellValue: rowData.EmployementShift1, month: rowData.RefMM, year: rowData.RefYY })'
+              (keydown.Tab)='onCollectionCellTab({nextCellName: "CC2", rowNumber: rowIndex})'>
+                <option *ngFor="let explCode of explanationCodeOptions2" value={{explCode.text}}>
+                    {{explCode.text}}
+                </option>
+              </select> -->
+              <select class="collection-select" [(ngModel)]="rowData.EmployementShift1.text" tabindex="0" id="CC1{{rowIndex}}" appendTo="body" aria-labelledby="interviewScriptText"
+                (change)='onExplanationComment1Changed({nextCellName: "CC1", rowNumber: rowIndex, cellName : "CC1", rowType: "AE", cellValue: rowData.EmployementShift1, month: rowData.RefMM, year: rowData.RefYY })'
+                (keydown.Tab)='onCollectionCellTab({nextCellName: "CC2", rowNumber: rowIndex})'>
+                <option *ngFor="let explCode of explanationCodeOptions2" value={{explCode.text}}>
+                    {{explCode.text}}
+                </option>
+              </select>
+
+              <!-- <p-dropdown optionLabel="text" autoWidth="false" [options]="explanationCodeOptions2" aria-labelledby="interviewScriptText" tabindex="0" id="CC1{{rowIndex}}"
+                (keydown.Tab)='onCollectionCellTab({nextCellName: "CC2", rowNumber: rowIndex})'
+                (onChange)='onExplanationComment1Changed({nextCellName: "CC1", rowNumber: rowIndex, cellName : "PW-HR", rowType: "AE", cellValue: rowData.EmployementShift1, month: rowData.RefMM, year: rowData.RefYY })'
+                [style]="{ width: '100%', 'min-width': '100%' }" appendTo="body"
+                [(ngModel)]="rowData.EmployementShift1">
+              </p-dropdown> -->
+            </td>
+
+            <!--PW-CC1--No dropdown-->
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'PW'" class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line">
+              <img width="100%" src="../../../../assets/shadedbox.PNG">
+            </td>
+
+            <!--AE-CC2-->
+            <td [ngStyle]="{'width': '3.5em'}" pEditableColumn *ngIf="rowData.RowType === 'AE'" pTooltip={{rowData.EmployementShift2?.text}} tooltipPosition="top">
+
+              <select class="collection-select" [(ngModel)]="rowData.EmployementShift2.text" [disabled]="rowData.disableEmployementShift2" appendTo="body" tabindex="0" id="CC2{{rowIndex}}" aria-labelledby="interviewScriptText"
+              (change)='onExplanationComment1Changed({nextCellName: "CC2", rowNumber: rowIndex, cellName : "CC2", rowType: "AE", cellValue: rowData.EmployementShift2, month: rowData.RefMM, year: rowData.RefYY })'
+              (keydown.Tab)='onCollectionCellTab({nextCellName: "aeplp", rowNumber: rowIndex})'>
+                <option *ngFor="let explCode2 of explanationCodeOptions" value={{explCode2.text}}>
+                    {{explCode2.text}}
+                </option>
+              </select>
+
+              <!-- <p-dropdown optionLabel="text" [options]="explanationCodeOptions" aria-labelledby="interviewScriptText" tabindex="0" id="CC2{{rowIndex}}"
+              [disabled]="rowData.disableEmployementShift2"
+              (keydown.Tab)='onCollectionCellTab({nextCellName: "aeplp", rowNumber: rowIndex})'
+              (onChange)='onExplanationComment1Changed({nextCellName: "CC2", rowNumber: rowIndex, cellName : "PW-HR", rowType: "AE", cellValue: rowData.EmployementShift2, month: rowData.RefMM, year: rowData.RefYY })'
+              [(ngModel)]="rowData.EmployementShift2"   [style]="{ width: '100%', 'min-width': '100%' }" appendTo="body"
+                ></p-dropdown> -->
+            </td>
+
+            <!--PW-CC2--No dropdown-->
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'PW'" class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line">
+              <img width="100%" src="../../../../assets/shadedbox.PNG">
+            </td>
+
+            <!--AE-PLP-->
+            <td [ngStyle]="{'width': '3.5em'}" pEditableColumn *ngIf="rowData.RowType === 'AE'"
+                [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isPayFrequencyMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isPayFrequencyMissing}"
+                pTooltip={{rowData.PayFrequency?.text}} tooltipPosition="top">
+
+                <select class="collection-select" [(ngModel)]="rowData.PayFrequency.text" [disabled]="disablePlpClpOptions" appendTo="body" tabindex="0" id="aeplp{{rowIndex}}" aria-labelledby="interviewScriptText"
+                (change)='updateMicroRatios({nextCellName: "aeplp", rowNumber: rowIndex, cellName : "AE-PLP", rowType: "PW", cellValue: rowData.PayFrequency, month: rowData.RefMM, year: rowData.RefYY })'
+                (keydown.Tab)='onCollectionCellTab({nextCellName: "aeclp", rowNumber: rowIndex})'
+                [ngClass]="{'microdata-dd-error': rowData.MicroDataCellContextError.isPayFrequencyMissing, 'microdata-dd-noerror': !rowData.MicroDataCellContextError.isPayFrequencyMissing}"
+                (onFocus)='onFocus({rowType: "AE", IsRatioCell: false, cellName : "PLP", month: rowData.RefMM, year: rowData.RefYY })'>
+                  <option *ngFor="let lopp of loppOptions" value={{lopp.text}}>
+                      {{lopp.text}}
+                  </option>
+                </select>
+
+
+              <!-- <p-dropdown optionLabel="text" [options]="loppOptions" aria-labelledby="interviewScriptText" tabindex="0" id="aeplp{{rowIndex}}"
+                  [(ngModel)]="rowData.PayFrequency" [disabled]="disablePlpClpOptions"
+                  (keydown.Tab)='onCollectionCellTab({nextCellName: "aeclp", rowNumber: rowIndex})'
+                  [ngClass]="{'microdata-dd-error': rowData.MicroDataCellContextError.isPayFrequencyMissing, 'microdata-dd-noerror': !rowData.MicroDataCellContextError.isPayFrequencyMissing}"
+                  (onChange)='updateMicroRatios({nextCellName: "aeplp", rowNumber: rowIndex, cellName : "PW-HR", rowType: "PW", cellValue: rowData.PayFrequency, month: rowData.RefMM, year: rowData.RefYY })'
+                  (onFocus)='onFocus({rowType: "AE", IsRatioCell: false, cellName : "PLP", month: rowData.RefMM, year: rowData.RefYY })'
+                  [style]="{ width: '100%', 'min-width': '100%' }" appendTo="body">
+              </p-dropdown> -->
+            </td>
+
+
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'PW'" class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line">
+              <img width="100%" src="../../../../assets/shadedbox.PNG">
+            </td>
+
+            <!--AE-CLP-->
+            <td [ngStyle]="{'width': '3.5em'}" pEditableColumn *ngIf="rowData.RowType === 'AE'"
+                [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isCommissionsPayFrequencyMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isCommissionsPayFrequencyMissing}"
+                pTooltip={{rowData.CommisionPayFrequncy?.text}} tooltipPosition="top">
+
+                <select class="collection-select" [(ngModel)]="rowData.CommisionPayFrequncy.text" [disabled]="disablePlpClpOptions" appendTo="body" tabindex="0" id="aeclp{{rowIndex}}" aria-labelledby="interviewScriptText"
+                (change)='updateMicroRatios({nextCellName: "aeclp", rowNumber: rowIndex, cellName : "AE-CLP", rowType: "PW", cellValue: rowData.CommisionPayFrequncy, month: rowData.RefMM, year: rowData.RefYY })'
+                (keydown.Tab)='onCollectionCellTab({nextCellName: "aerc", rowNumber: rowIndex})'
+                [ngClass]="{'microdata-dd-error': rowData.MicroDataCellContextError.isCommissionsPayFrequencyMissing, 'microdata-dd-noerror': !rowData.MicroDataCellContextError.isCommissionsPayFrequencyMissing}"
+                (onFocus)='onFocus({rowType: "AE", IsRatioCell: false, cellName : "CLP", month: rowData.RefMM, year: rowData.RefYY })'>
+                  <option *ngFor="let lopp of loppOptions" value={{lopp.text}}>
+                      {{lopp.text}}
+                  </option>
+                </select>
+
+                      <!-- <p-dropdown optionLabel="text" [options]="loppOptions" aria-labelledby="interviewScriptText" tabindex="0" id="aeclp{{rowIndex}}"
+                          [(ngModel)]="rowData.CommisionPayFrequncy" [disabled]="disablePlpClpOptions"
+                          (keydown.Tab)='onCollectionCellTab({nextCellName: "aerc", rowNumber: rowIndex})'
+                          [ngClass]="{'microdata-dd-error': rowData.MicroDataCellContextError.isCommissionsPayFrequencyMissing, 'microdata-dd-noerror': !rowData.MicroDataCellContextError.isCommissionsPayFrequencyMissing}"
+                          (onChange)='updateMicroRatios({nextCellName: "aeclp", rowNumber: rowIndex, cellName : "PW-HR", rowType: "PW", cellValue: rowData.CommisionPayFrequncy, month: rowData.RefMM, year: rowData.RefYY })'
+                          (onFocus)='onFocus({rowType: "AE", IsRatioCell: false, cellName : "CLP", month: rowData.RefMM, year: rowData.RefYY })'
+
+                          [style]="{ width: '100%', 'min-width': '100%' }" appendTo="body"
+                          ></p-dropdown> -->
+            </td>
+
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'PW'" class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line">
+              <img width="100%" src="../../../../assets/shadedbox.PNG">
+            </td>
+
+            <!--AE-RC-->
+            <td [ngStyle]="{'width': '3.5em'}" pEditableColumn *ngIf="rowData.RowType === 'AE'" pTooltip={{rowData.ResponseCode?.text}} tooltipPosition="top">
+
+
+
+              <select class="collection-select" [(ngModel)]="rowData.ResponseCode.text" appendTo="body"  tabindex="0" id="aerc{{rowIndex}}"
+              (change)='updateMicroRatios({month: rowData.RefMM, year: rowData.RefYY, nextCellName: "RC", rowType: "AE", cellValue: rowData.ResponseCode, rowNumber: rowIndex+1, cellName : "RC"})'
+              (keydown.Tab)='onCollectionCellTab({nextCellName: "pwCell", rowNumber: rowIndex+1, cellValue: rowData.ResponseCode})'>
+                <option *ngFor="let resp of respCodeOptions" value={{resp.text}}>
+                    {{resp.text}}
+                </option>
+              </select>
+                      <!-- <p-dropdown optionLabel="text" [options]="respCodeOptions" tabindex="0" id="aerc{{rowIndex}}"
+                      [(ngModel)]="rowData.ResponseCode"
+                      (keydown.Tab)='onCollectionCellTab({nextCellName: "pwCell", rowNumber: rowIndex+1})'
+                          [style]="{ width: '100%', 'min-width': '100%' }" appendTo="body"></p-dropdown> -->
+
+            </td>
+
+            <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'PW'" class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line">
+              <img width="100%" src="../../../../assets/shadedbox.PNG">
+            </td>
+            <!--End of entry grid-->
+
+            <!--aria-labelledby="interviewErrorScriptText"-->
+
+            <!--Start of ratio grid-->
+
+            <td [ngStyle]="{'width': '2.5em'}" *ngIf="rowGroupMetaData[rowData.RefMMYY].index === rowIndex"
+                styleClass="center" pTooltip={{rowData.AWH}} tooltipPosition="top"
+                class="microdatagrid-month-seperation-line"
+                (click)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.AWH, cellNameForAccessibility: "Average Weekly Hours Ratio", cellName : "AWH", month: rowData.RefMM, year: rowData.RefYY })'
+                [ngClass]="{'ces-microratio-cell-error': rowData.MicroDataRatioContextError.isTotalWorkerAvgWeeklyHrsRatioError ||  rowData.MicroDataRatioOtmContextError.isOtmTotalWorkerAvgWeeklyHrsRatioError,
+                  'ces-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isTotalWorkerAvgWeeklyHrsRatioError && !rowData.MicroDataRatioOtmContextError.isOtmTotalWorkerAvgWeeklyHrsRatioError}"
+                [attr.rowspan]="rowGroupMetaData[rowData.RefMMYY].size">
+
+                <input [value]="rowData.AWH | number:'1.2-2'"
+                  (click)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.AWH, cellNameForAccessibility: "Average Weekly Hours Ratio", cellName : "AWH", month: rowData.RefMM, year: rowData.RefYY })'
+                  [ngClass]="{'ces-input-microratio-cell-error': rowData.MicroDataRatioContextError.isTotalWorkerAvgWeeklyHrsRatioError ||  rowData.MicroDataRatioOtmContextError.isOtmTotalWorkerAvgWeeklyHrsRatioError,
+                  'ces-input-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isTotalWorkerAvgWeeklyHrsRatioError && !rowData.MicroDataRatioOtmContextError.isOtmTotalWorkerAvgWeeklyHrsRatioError}"
+                  [pKeyFilter]="disablekeyentry"
+                  [ngStyle]="{'width': '100%', 'padding-right': '0px', 'padding-left': '0px'}" pInputText type="text" />
+                <!-- <b>{{rowData.AWH | number:'1.2-2'}}</b> -->
+            </td>
+
+
+            <!--AHE-->
+            <td [ngStyle]="{'width': '5.5em'}" pTooltip={{rowData.AHE}} tooltipPosition="top" *ngIf="rowGroupMetaData[rowData.RefMMYY].index === rowIndex" styleClass="center"
+              class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line"
+              (click)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.AHE, cellNameForAccessibility: "Average Hourly Earnings", cellName : "AHE", month: rowData.RefMM, year: rowData.RefYY })'
+              [ngClass]="{'ces-microratio-cell-error': rowData.MicroDataRatioContextError.isTotalWorkerAvgHrsEarningsRatioError || rowData.MicroDataRatioOtmContextError.isOtmTotalWorkerAvgHrsEarningsRatioError,
+                'ces-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isTotalWorkerAvgHrsEarningsRatioError && !rowData.MicroDataRatioOtmContextError.isOtmTotalWorkerAvgHrsEarningsRatioError}"
+              [attr.rowspan]="rowGroupMetaData[rowData.RefMMYY].size">
+
+              <input
+                [value]="rowData.AHE | number:'1.2-2'"
+                [pKeyFilter]="disablekeyentry"
+                (focus)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.AHE, cellNameForAccessibility: "Average Hourly Earnings", cellName : "AHE", month: rowData.RefMM, year: rowData.RefYY })'
+                [ngClass]="{'ces-input-microratio-cell-error': rowData.MicroDataRatioContextError.isTotalWorkerAvgHrsEarningsRatioError || rowData.MicroDataRatioOtmContextError.isOtmTotalWorkerAvgHrsEarningsRatioError,
+                  'ces-input-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isTotalWorkerAvgHrsEarningsRatioError && !rowData.MicroDataRatioOtmContextError.isOtmTotalWorkerAvgHrsEarningsRatioError}"
+
+                [ngStyle]="{'width': '100%', 'padding-right': '0px', 'padding-left': '0px'}" pInputText type="text" />
+
+              <!-- $<b>{{rowData.AHE | number:'1.2-2'}}</b> -->
+            </td>
+
+
+            <!--AWE-->
+            <td [ngStyle]="{'width': '5.5em'}" pTooltip={{rowData.AWE}} tooltipPosition="top" *ngIf="rowGroupMetaData[rowData.RefMMYY].index === rowIndex" styleClass="center"
+              class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line"
+              (click)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.AWE, cellNameForAccessibility: "Average Weekly Earnings", cellName : "AWE", month: rowData.RefMM, year: rowData.RefYY })'
+
+              [ngClass]="{'ces-microratio-cell-error': rowData.MicroDataRatioContextError.isTotalWokerAvgWeeklyEarningsRatioError,
+                'ces-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isTotalWokerAvgWeeklyEarningsRatioError}"
+              [attr.rowspan]="rowGroupMetaData[rowData.RefMMYY].size">
+
+              <span class="p-input-icon-left">
+                <!-- <i class="fas fa-dollar-sign"></i> -->
+
+                <input [value]="rowData.AWE | number:'1.2-2'"
+                [pKeyFilter]="disablekeyentry"
+                (focus)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.AWE, cellNameForAccessibility: "Average Weekly Earnings", cellName : "AWE", month: rowData.RefMM, year: rowData.RefYY })'
+                [ngClass]="{'ces-input-microratio-cell-error': rowData.MicroDataRatioContextError.isTotalWokerAvgWeeklyEarningsRatioError,
+                  'ces-input-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isTotalWokerAvgWeeklyEarningsRatioError}"
+                  [ngStyle]="{'width': '100%', 'padding-right': '0px', 'padding-left': '0px'}" pInputText type="text" />
+            </span>
+
+            <!-- $<b>{{rowData.AWE | number:'1.2-2'}}</b> -->
+            </td>
+
+
+            <!--AOT-->
+            <td [ngStyle]="{'width': '2.5em'}" pTooltip={{rowData.AOT}} tooltipPosition="top" *ngIf="rowGroupMetaData[rowData.RefMMYY].index === rowIndex" styleClass="center"
+              class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line"
+              (click)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.AOT, cellNameForAccessibility: "Average Over Time Ratio", cellName : "AOT", month: rowData.RefMM, year: rowData.RefYY })'
+
+              [ngClass]="{'ces-microratio-cell-error': rowData.MicroDataRatioContextError.isTotalWorkerAvgOvertimeRatioError || rowData.MicroDataRatioOtmContextError.isTotalWorkerAvgOvertimeRatioError,
+                'ces-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isTotalWorkerAvgOvertimeRatioError && !rowData.MicroDataRatioOtmContextError.isTotalWorkerAvgOvertimeRatioError}"
+              [attr.rowspan]="rowGroupMetaData[rowData.RefMMYY].size">
+                <input [value]="rowData.AOT | number:'1.2-2'"
+                  [pKeyFilter]="disablekeyentry"
+                  (focus)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.AOT, cellNameForAccessibility: "Average Over Time Ratio", cellName : "AOT", month: rowData.RefMM, year: rowData.RefYY })'
+
+                  [ngClass]="{'ces-input-microratio-cell-error': rowData.MicroDataRatioContextError.isTotalWorkerAvgOvertimeRatioError || rowData.MicroDataRatioOtmContextError.isTotalWorkerAvgOvertimeRatioError,
+                    'ces-input-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isTotalWorkerAvgOvertimeRatioError && !rowData.MicroDataRatioOtmContextError.isTotalWorkerAvgOvertimeRatioError}"
+
+                    [ngStyle]="{'width': '100%', 'padding-right': '0px', 'padding-left': '0px'}" pInputText type="text" />
+              <!-- <b>{{rowData.AOT | number:'1.2-2'}}</b> -->
+            </td>
+
+
+            <!--PW/AE-->
+            <td [ngStyle]="{'width': '2em'}"  pTooltip={{rowData.PWAE}} *ngIf="rowGroupMetaData[rowData.RefMMYY].index === rowIndex" styleClass="center"  tooltipPosition="top"
+            class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line"
+            (click)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.PWAE, cellNameForAccessibility: "Production Worker Ratio", cellName : "PWAE", month: rowData.RefMM, year: rowData.RefYY })'
+
+            [ngClass]="{'ces-microratio-cell-error': rowData.MicroDataRatioContextError.isProductionToTotalWorkerRatioError || rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerRatioError,
+              'ces-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isProductionToTotalWorkerRatioError && !rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerRatioError}"
+            [attr.rowspan]="rowGroupMetaData[rowData.RefMMYY].size">
+
+                <input [value]="rowData.PWAE | number:'1.2-2'"
+                [pKeyFilter]="disablekeyentry"
+                (focus)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.PWAE, cellNameForAccessibility: "Production Worker Ratio", cellName : "PWAE", month: rowData.RefMM, year: rowData.RefYY })'
+
+                [ngClass]="{'ces-input-microratio-cell-error': rowData.MicroDataRatioContextError.isProductionToTotalWorkerRatioError || rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerRatioError,
+                      'ces-input-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isProductionToTotalWorkerRatioError && !rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerRatioError}"
+                      [ngStyle]="{'width': '100%', 'padding-right': '0px', 'padding-left': '0px'}" pInputText type="text" />
+                <!-- <b>{{rowData.PWAE | number:'1.2-2'}}</b> -->
+            </td>
+
+            <!--WW/AE-->
+            <td [ngStyle]="{'width': '2em'}" pTooltip={{rowData.WWAE}}  tooltipPosition="top" *ngIf="rowGroupMetaData[rowData.RefMMYY].index === rowIndex" styleClass="center"
+            class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line"
+            (click)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.WWAE, cellNameForAccessibility: "Women Worker Ratio", cellName : "WWAE", month: rowData.RefMM, year: rowData.RefYY })'
+
+            [ngClass]="{'ces-microratio-cell-error': rowData.MicroDataRatioContextError.isWomenToTotalWokerRatioError || rowData.MicroDataRatioOtmContextError.isOtmWomenWorkerRatioError,
+              'ces-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isWomenToTotalWokerRatioError && !rowData.MicroDataRatioOtmContextError.isOtmWomenWorkerRatioError}"
+            [attr.rowspan]="rowGroupMetaData[rowData.RefMMYY].size">
+
+                <input [value]="rowData.WWAE | number:'1.2-2'"
+                  [pKeyFilter]="disablekeyentry"
+
+                  (click)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.WWAE, cellNameForAccessibility: "Women Worker Ratio", cellName : "WWAE", month: rowData.RefMM, year: rowData.RefYY })'
+
+                  [ngClass]="{'ces-input-microratio-cell-error': rowData.MicroDataRatioContextError.isWomenToTotalWokerRatioError || rowData.MicroDataRatioOtmContextError.isOtmWomenWorkerRatioError,
+                    'ces-input-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isWomenToTotalWokerRatioError && !rowData.MicroDataRatioOtmContextError.isOtmWomenWorkerRatioError}"
+                    [ngStyle]="{'width': '100%', 'padding-right': '0px', 'padding-left': '0px'}" pInputText type="text" />
+
+                <!-- <b>{{rowData.WWAE | number:'1.2-2'}}</b> -->
+            </td>
+
+
+            <!--PWAWH-->
+            <td [ngStyle]="{'width': '2.5em'}" pTooltip={{rowData.PWAWH}} tooltipPosition="top" *ngIf="rowGroupMetaData[rowData.RefMMYY].index === rowIndex" styleClass="center"
+            class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line"
+            (click)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.PWAWH, cellNameForAccessibility: "Production Worker Average Weekly Hours Ratio", cellName : "PWAWH", month: rowData.RefMM, year: rowData.RefYY })'
+
+            [ngClass]="{'ces-microratio-cell-error': rowData.MicroDataRatioContextError.isProductionWorkerAvgWeeklyHrsRatioError || rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerAvgWeeklyHrsRatioError,
+              'ces-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isProductionWorkerAvgWeeklyHrsRatioError && !rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerAvgWeeklyHrsRatioError}"
+            [attr.rowspan]="rowGroupMetaData[rowData.RefMMYY].size">
+
+              <input [value]="rowData.PWAWH | number:'1.2-2'"
+                [pKeyFilter]="disablekeyentry"
+                (focus)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.PWAWH, cellNameForAccessibility: "Production Worker Average Weekly Hours Ratio", cellName : "PWAWH", month: rowData.RefMM, year: rowData.RefYY })'
+                [ngClass]="{'ces-input-microratio-cell-error': rowData.MicroDataRatioContextError.isProductionWorkerAvgWeeklyHrsRatioError || rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerAvgWeeklyHrsRatioError,
+                  'ces-input-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isProductionWorkerAvgWeeklyHrsRatioError && !rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerAvgWeeklyHrsRatioError}"
+                  [ngStyle]="{'width': '100%', 'padding-right': '0px', 'padding-left': '0px'}" pInputText type="text" />
+              <!-- <b>{{rowData.PWAWH | number:'1.2-2'}}</b> -->
+            </td>
+
+
+            <!--PWAHE-->
+            <td [ngStyle]="{'width': '5.5em'}" pTooltip={{rowData.PWAHE}} tooltipPosition="top"  *ngIf="rowGroupMetaData[rowData.RefMMYY].index === rowIndex" styleClass="center"
+            class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line"
+            (click)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.PWAHE, cellNameForAccessibility: "Production Worker Average Hours Earnings", cellName : "PWAHE", month: rowData.RefMM, year: rowData.RefYY })'
+
+            [ngClass]="{'ces-microratio-cell-error': rowData.MicroDataRatioContextError.isProductionWorkerAvgHrsEarningsRatioError || rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerAvgHrsEarningsRatioError,
+              'ces-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isProductionWorkerAvgHrsEarningsRatioError && !rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerAvgHrsEarningsRatioError}"
+            [attr.rowspan]="rowGroupMetaData[rowData.RefMMYY].size">
+              <span class="p-input-icon-left">
+                <!-- <i class="fas fa-dollar-sign"></i> -->
+
+                <input [value]="rowData.PWAHE | number:'1.2-2'"
+                [pKeyFilter]="disablekeyentry"
+                (focus)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.PWAHE, cellNameForAccessibility: "Production Worker Average Hours Earnings", cellName : "PWAHE", month: rowData.RefMM, year: rowData.RefYY })'
+                [ngClass]="{'ces-input-microratio-cell-error': rowData.MicroDataRatioContextError.isProductionWorkerAvgHrsEarningsRatioError || rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerAvgHrsEarningsRatioError,
+                    'ces-input-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isProductionWorkerAvgHrsEarningsRatioError && !rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerAvgHrsEarningsRatioError}"
+                    [ngStyle]="{'width': '100%', 'padding-right': '0px', 'padding-left': '0px'}" pInputText type="text" />
+              </span>
+            <!-- $<b>{{rowData.PWAHE | number:'1.2-2'}}</b> -->
+            </td>
+
+            <!--PWAWE-->
+            <td [ngStyle]="{'width': '5.5em'}" pTooltip={{rowData.PWAWE}} tooltipPosition="top" *ngIf="rowGroupMetaData[rowData.RefMMYY].index === rowIndex" styleClass="center"
+            class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line"
+            (click)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.PWAWE, cellNameForAccessibility: "Production Worker Average Weekly Earnings", cellName : "PWAWE", month: rowData.RefMM, year: rowData.RefYY })'
+            [ngClass]="{'ces-microratio-cell-error': rowData.MicroDataRatioContextError.isProductionWorkerAvgWeeklyEarningsRatioError,
+              'ces-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isProductionWorkerAvgWeeklyEarningsRatioError}"
+            [attr.rowspan]="rowGroupMetaData[rowData.RefMMYY].size">
+
+              <span class="p-input-icon-left">
+                <!-- <i class="fas fa-dollar-sign"></i> -->
+                <input [value]="rowData.PWAWE | number:'1.2-2'"
+                  [pKeyFilter]="disablekeyentry"
+
+                  (click)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.PWAWE, cellNameForAccessibility: "Production Worker Average Weekly Earnings", cellName : "PWAWE", month: rowData.RefMM, year: rowData.RefYY })'
+                  [ngClass]="{'ces-input-microratio-cell-error': rowData.MicroDataRatioContextError.isProductionWorkerAvgWeeklyEarningsRatioError,
+                    'ces-input-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isProductionWorkerAvgWeeklyEarningsRatioError}"
+                    [ngStyle]="{'width': '100%', 'padding-right': '0px', 'padding-left': '0px'}" pInputText type="text" />
+              </span>
+
+              <!-- $<b>{{rowData.PWAWE | number:'1.2-2'}}</b> -->
+            </td>
+
+            <!--PWAOT-->
+            <td [ngStyle]="{'width': '2.5em'}"  pTooltip={{rowData.PWAOT}} tooltipPosition="top" *ngIf="rowGroupMetaData[rowData.RefMMYY].index === rowIndex" styleClass="center"
+              class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line"
+              (click)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.PWAOT, cellNameForAccessibility: "Production Worker Average Over Time", cellName : "PWAOT", month: rowData.RefMM, year: rowData.RefYY })'
+
+              [ngClass]="{'ces-microratio-cell-error': rowData.MicroDataRatioContextError.isProductionWorkerAvgOvertimeRatioError || rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerAvgOvertimeRatioError,
+                'ces-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isProductionWorkerAvgOvertimeRatioError && !rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerAvgOvertimeRatioError}"
+              [attr.rowspan]="rowGroupMetaData[rowData.RefMMYY].size">
+                <input [value]="rowData.PWAOT | number:'1.2-2'"
+                  [pKeyFilter]="disablekeyentry"
+                  (focus)='onFocus({rowType: "", IsRatioCell: true, cellValue: rowData.PWAOT, cellNameForAccessibility: "Production Worker Average Over Time", cellName : "PWAOT", month: rowData.RefMM, year: rowData.RefYY })'
+                  [ngClass]="{'ces-input-microratio-cell-error': rowData.MicroDataRatioContextError.isProductionWorkerAvgOvertimeRatioError || rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerAvgOvertimeRatioError,
+                    'ces-input-microratio-cell-noerror': !rowData.MicroDataRatioContextError.isProductionWorkerAvgOvertimeRatioError && !rowData.MicroDataRatioOtmContextError.isOtmProductionWorkerAvgOvertimeRatioError}"
+                    [ngStyle]="{'width': '100%', 'padding-right': '0px', 'padding-left': '0px'}" pInputText type="text" />
+                <!-- <b>{{rowData.PWAOT | number:'1.2-2'}}</b> -->
+            </td>
+
+
+            <td [ngStyle]="{'width': '3.0em'}" *ngIf="rowGroupMetaData[rowData.RefMMYY].index === rowIndex" styleClass="center"
+            class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line"
+            [attr.rowspan]="rowGroupMetaData[rowData.RefMMYY].size">
+            <b>{{rowData.RatioExportDateTime | date:'M/d/yy'}}</b>
+            </td>
+
+            <td [ngStyle]="{'width': '3.0em'}" *ngIf="rowGroupMetaData[rowData.RefMMYY].index === rowIndex" styleClass="goodDateMicroCell"
+            class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line"
+            [attr.rowspan]="rowGroupMetaData[rowData.RefMMYY].size">
+            <b>{{rowData.RatioGoodDate | date:'M/d/yy'}}</b>
+            </td>
+            <!--end of ratio grid-->
+          </tr>
+        </ng-template>
+      </p-table>
+  </p-scrollPanel>
+
+  <!--Rollover popup-->
+  <p-dialog header="Rollover" (onShow)="setRolloverFocus()" [focusOnShow]="false" [(visible)]="showRollOverDialog" [style]="{width: '75vw'}" [baseZIndex]="10000">
+      <fsms-tcw-rollver></fsms-tcw-rollver>
+      <br><br>
+      <p-footer>
+         <button type="button" class="ui-button-default" pButton icon="pi pi-check" (click)="onStartRollover()" label="Ok"></button>
+         <button type="button" pButton icon="pi pi-times" (click)="onRollOverCancel()" label="Cancel" class="ui-button-default"></button>
+        </p-footer>
+  </p-dialog>
+
+
+  <!--AE LDB Check error popup -->
+  <!--If time permits extract this to another class and make this a commone code for both CES and JOLTS-->
+  <p-dialog header='QUI/AE Comparison Failed'
+        [showHeader]=true
+        [closable]=false
+        [closeOnEscape]=false
+        [dismissableMask]=false
+        [modal]=true
+        [resizable]=true
+        [style]="{width: '50vw'}"
+        [draggable]=true
+        [positionLeft]=50
+        [positionTop]=50
+        [visible]='(canShowLdbError$ | async)'>
+
+
+        <div class="p-grid">
+          <div class="p-col-10">
+            Please verify the All Employees Total. It does not match the employement data reported for Unemployment Insurance Purposes: Verify that
+            you are collecting the data for the correct company and state. Otherwise, please select an explanation code.
+          </div>
+          <div class="p-col-2">
+            <button type="button" pButton icon="pi pi-check" (click)="openNotes()" label="Notes"></button>
+          </div>
+        </div>
+        <br>
+        <div *ngIf="canShowLdbErrorNoticeText$ | async" class="p-grid">
+          <div class="p-col-10">
+            <label id="lblNceNaicsNotice">Notice: This is a Noncovered Employment (NCE) industry. CES employment may be greater than QUI employment data as a result.</label>
+          </div>
+          <div class="p-col-2">
+          </div>
+        </div>
+
+        <br>
+
+        <div class="p-grid">
+          <div class="p-col-10">
+            Select Explanation Code
+          </div>
+          <div class="p-col-2">
+          </div>
+        </div>
+        <div class="p-grid">
+          <div class="p-col-10">
+            <p-dropdown optionLabel="text" [options]="explanationLdbCheck"
+            [style]="{ width: '100%', 'min-width': '100%' }" appendTo="body"
+            [(ngModel)]="SelectedExplanationLdbCheck">
+          </p-dropdown>
+          </div>
+          <div class="p-col-2">
+          </div>
+        </div>
+
+        <br>
+
+        <div class="p-grid">
+          <div class="p-col-10">
+            If wrong location(s) reported obtain report for correct UI/Run:
+          </div>
+          <div class="p-col-2">
+          </div>
+        </div>
+
+        <div class="p-grid">
+          <div class="p-col-5">
+            <button type="button" pButton icon="pi pi-times" accesskey="T" (click)="rectifyLdbErrorForAE()" label="Re&#818;turn to Data Entry Screen and Modify Data"></button>
+          </div>
+          <div class="p-col-5">
+            <button type="button" [disabled]="ldbErrorAcceptBtnDisabled" pButton icon="pi pi-check" accesskey="A"  (click)="acceptLdbRcValueAndReturnToCollectionGrid()" label="&#818;Accept Reported AE with above Explanation"></button>
+          </div>
+          <div class="p-col-3">
+
+          </div>
+
+        </div>
+  </p-dialog>
+
+  <!-- <p-messages [value]="notifications"></p-messages> -->
+  <p-toast key="rollovertoast" position="top-right"></p-toast>
+
+
+
+
+
+
+
