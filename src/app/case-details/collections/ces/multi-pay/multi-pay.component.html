@@ -1,0 +1,260 @@
+<div class="vertical-container-large">
+  <div class="p-grid">
+    <div class="p-col-6">
+      <fieldset id="interviewScriptsFieldSet">
+        <legend class="tcw-collection-field-legend">Transcripts</legend>
+        <!--interview scripts-->
+        <p>{{ interviewTranscriptText$ | async}}</p>
+      </fieldset>
+    </div>
+    <div class="p-col-6">
+      <fieldset id="errorScriptsFieldset">
+        <legend class="tcw-collection-field-legend">Error Transcripts</legend>
+        <!--error scripts-->
+        <!-- <p>{{errorMessage$ | async}}</p> -->
+        <p>{{ errorTranscript$ | async}}</p>
+
+      </fieldset>
+    </div>
+  </div>
+
+
+  <div *ngFor="let mutliPay of (cesMultiPayMicroData$ | async); let i = index">
+            <h3 class="batch-entry-header">Pay Group {{i+1}}</h3>
+            <hr>
+            <p-table [columns]="multiPayScrollableCols" [value]="mutliPay.cesMultiPayMicroRows"
+                selectionMode="single" dataKey="RefMM"
+                [scrollable]="true" scrollHeight="100%"
+                styleClass="microdatacustom tcw-microdata-header">
+
+                 <!--Toolbar in caption section-->
+                <ng-template pTemplate="caption">
+
+                </ng-template>
+
+                <!--grid column headers-->
+                  <ng-template pTemplate="header" let-columns>
+                    <tr role="row">
+                        <th *ngFor="let col of columns"  [ngStyle]="{'width': col.width}" [ngClass]="{'tcw-microdata-ratio-header': col.IsRatioHeader}">
+                          {{col.header}}
+                        </th>
+                    </tr>
+                  </ng-template>
+
+                <!-- Grid body Section-->
+                  <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-columns="columns">
+
+                    <!--class="batchdata-entry-row"-->
+                    <tr [ngClass]="{'tcw-microdata-ratio-row': rowData.Label === 'PW', 'tcw-microdata-row': rowData.Label === 'AE'}" tabindex="0">
+
+                      <td *ngIf="rowGroupMetaMultiPayData[rowData.RefMMYY].index === rowIndex" role="cell" styleClass="microdata-month-cell"
+                        [ngStyle]="{'width': '4.4em'}" class="microdatagrid-month-seperation-line"
+                                [attr.rowspan]="rowGroupMetaMultiPayData[rowData.RefMMYY].size">
+                          <b>{{rowData.RefMM}}/{{rowData.RefYY}}</b>
+                      </td>
+
+                      <td  [ngStyle]="{'width': '2.5em'}" *ngIf="rowData.RowType === 'AE'" role="cell">
+                        {{rowData.RowType}}
+                      </td>
+
+                      <td [ngStyle]="{'width': '2.5em'}"  *ngIf="rowData.RowType === 'PW'" role="cell" class="microdatagrid-month-seperation-line">
+                        {{rowData.RowType}}
+                      </td>
+
+                      <!--AE-->
+                      <td [ngStyle]="{'width': '4.5em'}" *ngIf="rowData.RowType === 'AE'" role="cell" class="cell-parent">
+                        <input width="100%" #begin tabindex="0" pTooltip={{rowData.TotalWorkers}} tooltipPosition="top" [disabled]="rowIndex === 2"
+                              (blur)='runEditCheckErros({cellName : "AE", rowType: "AE", payGroupIndex: i+1, cellValue: rowData.TotalWorkers, month: rowData.RefMM, year: rowData.RefYY })'
+
+                              (focus)='onFocus({cellName : "AE", IsRatioCell: false, rowType: "AE", month: rowData.RefMM, year: rowData.RefYY, payGroupIndex: i+1 })'
+                              [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isTotalWorkersMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalWorkersMissing}"
+                              pInputText type="text" pKeyFilter="pnum" maxlength="7" class="custom-edit-control cell-input-text"
+                              [(ngModel)]="rowData.TotalWorkers">
+                      </td>
+
+                      <!--PW-->
+                      <td [ngStyle]="{'width': '4.5em'}" *ngIf="rowData.RowType === 'PW'" role="cell" class="cell-parent microdatagrid-month-seperation-line">
+                        <input  width="100%" #begin tabindex="=0" pTooltip={{rowData.TotalNonSupervisoryWokers}} tooltipPosition="top" [disabled]="rowIndex === 3"
+                              (blur)='runEditCheckErros({cellName : "PW", rowType: "PW", payGroupIndex: i+1, cellValue: rowData.TotalNonSupervisoryWokers, month: rowData.RefMM, year: rowData.RefYY })'
+
+                              (focus)='onFocus({rowType: "PW", IsRatioCell: false, cellName : "PW", month: rowData.RefMM, year: rowData.RefYY, payGroupIndex: i+1 })'
+                              [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isTotalNonSupervisoryWokersMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalNonSupervisoryWokersMissing}"
+                              pInputText type="text" pKeyFilter="pnum" maxlength="7" class="custom-edit-control cell-input-text"
+                              [(ngModel)]="rowData.TotalNonSupervisoryWokers">
+                      </td>
+
+                      <!--WW-->
+                      <td [ngStyle]="{'width': '4.5em'}" *ngIf="rowData.RowType === 'AE'" role="cell" class="cell-parent">
+                        <input  width="100%" #begin tabindex="=0" pTooltip={{rowData.TotalWomenWorkers}} tooltipPosition="top" [disabled]="rowIndex === 2"
+                              (blur)='runEditCheckErros({cellName : "WW", rowType: "AE", payGroupIndex: i+1, cellValue: rowData.TotalWomenWorkers, month: rowData.RefMM, year: rowData.RefYY })'
+
+                              (focus)='onFocus({cellName : "WW", IsRatioCell: false, rowType: "AE", month: rowData.RefMM, year: rowData.RefYY, payGroupIndex: i+1 })'
+                             [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isTotalWomenWorkersMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalWomenWorkersMissing}"
+                              pInputText type="text" pKeyFilter="pnum" maxlength="7" class="custom-edit-control cell-input-text"
+                              [(ngModel)]="rowData.TotalWomenWorkers">
+                      </td>
+
+
+                      <!--PW-WW-->
+                      <td [ngStyle]="{'width': '4.5em'}" *ngIf="rowData.RowType === 'PW'" class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line">
+                        <!-- <img width="100%" src="../../../../assets/shadedbox.PNG"> -->
+                      </td>
+
+                      <!--AE-PR-->
+                      <td [ngStyle]="{'width': '4.5em'}" *ngIf="rowData.RowType === 'AE'" role="cell" class="cell-parent">
+                        <input  width="100%" #begin tabindex="=0" pTooltip={{rowData.TotalWorkerPayrolls}} tooltipPosition="top" [disabled]="rowIndex === 2"
+                              (blur)='runEditCheckErros({cellName : "AE-PR", rowType: "AE", payGroupIndex: i+1, cellValue: rowData.TotalWorkerPayrolls, month: rowData.RefMM, year: rowData.RefYY })'
+
+                              (focus)='onFocus({rowType: "AE", IsRatioCell: false, payGroupIndex: i+1, cellName : rowData.RowType === "PW" ? "PW-PR": "AE-PR", month: rowData.RefMM, year: rowData.RefYY})'
+                              [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isTotalWorkerPayrollsMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalWorkerPayrollsMissing}"
+                              pInputText type="text" pKeyFilter="pnum" maxlength="10" class="custom-edit-control cell-input-text"
+                              [(ngModel)]="rowData.TotalWorkerPayrolls">
+                      </td>
+
+                      <!--PW-PR-->
+                      <td [ngStyle]="{'width': '4.5em'}" *ngIf="rowData.RowType === 'PW'" role="cell" class="cell-parent microdatagrid-month-seperation-line">
+                        <input  width="100%" #begin tabindex="=0" pTooltip={{rowData.TotalNonSupervisoryWorkerPayrolls}} tooltipPosition="top"
+                              (blur)='runEditCheckErros({cellName : "PW-PR", rowType: "PW", payGroupIndex: i+1, cellValue: rowData.TotalNonSupervisoryWorkerPayrolls, month: rowData.RefMM, year: rowData.RefYY })'
+                              [disabled]="rowIndex === 3"
+                              (focus)='onFocus({rowType: "PW", IsRatioCell: false, payGroupIndex: i+1, cellName : rowData.RowType === "PW" ? "PW-PR": "AE-PR", month: rowData.RefMM, year: rowData.RefYY })'
+                              [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isTotalNonSupervisoryWorkerPayrollsMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalNonSupervisoryWorkerPayrollsMissing}"
+                              pInputText type="text" pKeyFilter="pnum" maxlength="10" class="custom-edit-control cell-input-text"
+                              [(ngModel)]="rowData.TotalNonSupervisoryWorkerPayrolls">
+                      </td>
+
+                      <!--AE-CM-->
+                      <td [ngStyle]="{'width': '4.5em'}" *ngIf="rowData.RowType === 'AE'" role="cell" class="cell-parent">
+                        <input  width="100%" #begin tabindex="=0" pTooltip={{rowData.TotalCommisions}} tooltipPosition="top" [disabled]="rowIndex === 2"
+                              (blur)='runEditCheckErros({cellName : "AE-CM", rowType: "AE", payGroupIndex: i+1, cellValue: rowData.TotalCommisions, month: rowData.RefMM, year: rowData.RefYY })'
+
+                              (focus)='onFocus({rowType: "AE", IsRatioCell: false, payGroupIndex: i+1, cellName : rowData.RowType === "PW" ? "PW-CM": "AE-CM", month: rowData.RefMM, year: rowData.RefYY })'
+                              [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isTotalCommisionsMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalCommisionsMissing}"
+                              pInputText type="text" pKeyFilter="pnum" maxlength="8" class="custom-edit-control cell-input-text"
+                              [(ngModel)]="rowData.TotalCommisions">
+                      </td>
+
+                      <!--PW-CM-->
+                      <td [ngStyle]="{'width': '4.5em'}" *ngIf="rowData.RowType === 'PW'" role="cell" class="cell-parent microdatagrid-month-seperation-line">
+                        <input  width="100%" #begin tabindex="=0" pTooltip={{rowData.TotalNonSUpervisoryCommisions}} tooltipPosition="top"
+                              (blur)='runEditCheckErros({cellName : "PW-CM", rowType: "PW", payGroupIndex: i+1, cellValue: rowData.TotalNonSUpervisoryCommisions, month: rowData.RefMM, year: rowData.RefYY })'
+                              [disabled]="rowIndex === 3"
+                              (focus)='onFocus({rowType: "PW", IsRatioCell: false, payGroupIndex: i+1, cellName : rowData.RowType === "PW" ? "PW-CM": "AE-CM", month: rowData.RefMM, year: rowData.RefYY })'
+                              [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isTotalNonSUpervisoryCommisionsMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalNonSUpervisoryCommisionsMissing}"
+                              pInputText type="text" pKeyFilter="pnum" maxlength="8" class="custom-edit-control cell-input-text"
+                              [(ngModel)]="rowData.TotalNonSUpervisoryCommisions">
+                      </td>
+
+                      <!--AE-HR-->
+                      <td [ngStyle]="{'width': '4.5em'}" *ngIf="rowData.RowType === 'AE'" role="cell" class="cell-parent">
+                        <input  width="100%" #begin tabindex="=0" pTooltip={{rowData.TotalWorkerHours}} tooltipPosition="top" [disabled]="rowIndex === 2"
+                              (blur)='runEditCheckErros({cellName : "AE-HR", rowType: "AE", payGroupIndex: i+1, cellValue: rowData.TotalWorkerHours, month: rowData.RefMM, year: rowData.RefYY })'
+
+                              (focus)='onFocus({rowType: "AE", IsRatioCell: false, payGroupIndex: i+1, cellName : rowData.RowType === "PW" ? "PW-HR": "AE-HR", month: rowData.RefMM, year: rowData.RefYY })'
+                              [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isTotalWorkerHoursMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalWorkerHoursMissing}"
+                              pInputText type="text" pKeyFilter="pnum" maxlength="8" class="custom-edit-control cell-input-text"
+                              [(ngModel)]="rowData.TotalWorkerHours">
+                      </td>
+
+                      <!--PW-HR-->
+                      <td [ngStyle]="{'width': '4.5em'}" *ngIf="rowData.RowType === 'PW'" role="cell" class="cell-parent microdatagrid-month-seperation-line">
+                        <input  width="100%" #begin tabindex="=0" pTooltip={{rowData.TotalNonSupervisoryWorkerHours}} tooltipPosition="top"
+                              (blur)='runEditCheckErros({cellName : "PW-HR", rowType: "PW", payGroupIndex: i+1, cellValue: rowData.TotalNonSupervisoryWorkerHours, month: rowData.RefMM, year: rowData.RefYY })'
+                              [disabled]="rowIndex === 3"
+                              (focus)='onFocus({rowType: "PW", IsRatioCell: false, payGroupIndex: i+1, cellName : rowData.RowType === "PW" ? "PW-HR": "AE-HR", month: rowData.RefMM, year: rowData.RefYY })'
+                              [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isTotalNonSupervisoryWorkerHoursMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isTotalNonSupervisoryWorkerHoursMissing}"
+                              pInputText type="text" pKeyFilter="pnum" maxlength="7" class="custom-edit-control cell-input-text"
+                              [(ngModel)]="rowData.TotalNonSupervisoryWorkerHours">
+                      </td>
+
+                      <!--AE-OT-->
+                      <td [ngStyle]="{'width': '4.5em'}" *ngIf="rowData.RowType === 'AE'" class="tcw-microdata-cell-readonly">
+                        <!-- <img width="100%" src="../../../../assets/shadedbox.PNG"> -->
+                      </td>
+
+                      <!--PW-OT-->
+                      <td [ngStyle]="{'width': '4.5em'}" *ngIf="rowData.RowType === 'PW'" class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line">
+                        <!-- <img width="100%" src="../../../../assets/shadedbox.PNG"> -->
+                      </td>
+
+                        <!--AE-PLP-->
+                      <td [ngStyle]="{'width': '3.5em'}" pEditableColumn *ngIf="rowData.RowType === 'AE'"
+                          [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isPayFrequencyMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isPayFrequencyMissing}"
+                          pTooltip={{rowData.PayFrequency?.text}} tooltipPosition="top">
+                        <p-dropdown optionLabel="text" [options]="loppOptions"
+                            [(ngModel)]="rowData.PayFrequency" [disabled]="rowIndex === 2"
+                            [ngClass]="{'microdata-dd-error': rowData.MicroDataCellContextError.isPayFrequencyMissing, 'microdata-dd-noerror': !rowData.MicroDataCellContextError.isPayFrequencyMissing}"
+                            (onChange)='runEditCheckErros({cellName : "PW-HR", rowType: "PW", payGroupIndex: i+1, cellValue: rowData.PayFrequency, month: rowData.RefMM, year: rowData.RefYY })'
+                            (onFocus)='onFocus({rowType: "AE", IsRatioCell: false, cellName : "PLP",payGroupIndex: i+1,  month: rowData.RefMM, year: rowData.RefYY })'
+                            [style]="{ width: '100%', 'min-width': '100%' }" appendTo="body">
+                        </p-dropdown>
+                      </td>
+
+                      <!--PW-PLP-->
+                      <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'PW'" class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line">
+                        <!-- <img width="100%" src="../../../../assets/shadedbox.PNG"> -->
+                      </td>
+
+                      <!--AE-CLP-->
+                      <td [ngStyle]="{'width': '3.5em'}" pEditableColumn *ngIf="rowData.RowType === 'AE'"
+                      [ngClass]="{'microdata-cell-error': rowData.MicroDataCellContextError.isCommissionsPayFrequencyMissing, 'microdata-cell-noerror': !rowData.MicroDataCellContextError.isCommissionsPayFrequencyMissing}"
+
+                            pTooltip={{rowData.CommisionPayFrequncy?.text}} tooltipPosition="top">
+
+
+                                <p-dropdown optionLabel="text" [options]="loppOptions"
+                                    [(ngModel)]="rowData.CommisionPayFrequncy" [disabled]="rowIndex === 2"
+                                    [ngClass]="{'microdata-dd-error': rowData.MicroDataCellContextError.isCommissionsPayFrequencyMissing, 'microdata-dd-noerror': !rowData.MicroDataCellContextError.isCommissionsPayFrequencyMissing}"
+                                    (onChange)='runEditCheckErros({cellName : "PW-HR", rowType: "PW", payGroupIndex: i+1, cellValue: rowData.CommisionPayFrequncy, month: rowData.RefMM, year: rowData.RefYY })'
+                                    (onFocus)='onFocus({rowType: "AE", IsRatioCell: false, payGroupIndex: i+1, cellName : "CLP", month: rowData.RefMM, year: rowData.RefYY })'
+
+                                    [style]="{ width: '100%', 'min-width': '100%' }" appendTo="body"
+                                    ></p-dropdown>
+                      </td>
+
+                       <!--AE-Copy-->
+                      <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'AE'" class="tcw-microdata-cell-readonly">
+                        <button type="button" pButton icon="fas fa-copy" (click)="onRowAction({rowType: 'AE', payGroupIndex: i+1, month: rowData.RefMM, year: rowData.RefYY }, 3)" label="Copy AE" [disabled]="rowIndex === 2" class="ui-button-secondary"></button>
+                      </td>
+
+                      <!--PW-CLP-->
+                      <td [ngStyle]="{'width': '3.5em'}" pEditableColumn *ngIf="rowData.RowType === 'PW'" class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line">
+                      </td>
+
+                      <!--PW-zero button-->
+                      <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'PW'" class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line">
+                        <button type="button" [disabled]="rowIndex === 3" pButton icon="fab fa-creative-commons-zero"(click)="onRowAction({rowType: 'PW', payGroupIndex: i+1, month: rowData.RefMM, year: rowData.RefYY }, 2)" label="Set Zero  " class="ui-button-secondary"></button>
+
+                      </td>
+
+                      <!--AE-clear button-->
+                      <td [ngStyle]="{'width': '3.5em'}" pEditableColumn  *ngIf="rowData.RowType === 'AE'" pTooltip={{rowData.EmployementShift2?.text}} tooltipPosition="top">
+                        <button type="button" pButton  icon="fas fa-trash"(click)="onRowAction({rowType: 'AE', payGroupIndex: i+1, month: rowData.RefMM, year: rowData.RefYY }, 1)" [disabled]="rowIndex === 2" label="Clear AE" class="ui-button-secondary"></button>
+                      </td>
+
+                      <!--PW-nothing-->
+                      <td [ngStyle]="{'width': '3.5em'}" *ngIf="rowData.RowType === 'PW'" class="tcw-microdata-cell-readonly microdatagrid-month-seperation-line">
+                        <!-- <img width="100%" src="../../../../assets/shadedbox.PNG"> -->
+                      </td>
+
+                      <!--End of entry grid-->
+                    </tr>
+                  </ng-template>
+                  <!--show the dialog footer buttons only after the last paygroup grid -->
+                  <ng-template *ngIf="i+1 === 2" pTemplate="summary" role="groupbutton">
+                    <div style="text-align: right">
+                      <button pButton role="button" type="button" class="ui-button-default" icon="fa fa-save"  label="Close MultiPay" (click)="onCloseNormalizeMultiPay(false)">
+                      </button>
+                      <button pButton role="button" type="button" class="ui-button-default" icon="fas fa-trash" label="Delete MultiPay" (click)="onDeleteMultiPay(true)">
+                      </button>
+                      <button pButton role="button" type="button" class="ui-button-default" icon="fas fa-window-close" label="Cancel" (click)="onCancel()">
+                      </button>
+                    </div>
+
+                  </ng-template>
+          </p-table>
+          <br><br>
+  </div>
+</div>
+
+
+
