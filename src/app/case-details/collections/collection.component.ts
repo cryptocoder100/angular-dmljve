@@ -36,10 +36,9 @@ export class CollectionComponent implements OnInit, AfterViewInit, OnDestroy {
                                                 map(c => this.createCaseSummary(c)),
                                                 catchError(this.handleError));
 
-  dropUnitSubs: Subscription;
+
   reminderSubs: Subscription;
   reminderInfo: RolloverReminder = null;
-
 
     // splitter transitino
   only = 0;
@@ -49,7 +48,6 @@ export class CollectionComponent implements OnInit, AfterViewInit, OnDestroy {
   // error observable to show any errors on this page
   error$: Observable<string>;
 
-  dropUnitMessage = null;
   // splitter related variables
   notesSplitterPanelSize: number;
   surveyId: boolean;
@@ -69,15 +67,14 @@ export class CollectionComponent implements OnInit, AfterViewInit, OnDestroy {
               private joltsCollectionService: JoltsCollectionsService,
               private uiConfigService: UIConfigService) { }
 
+  ngAfterViewInit(): void {
+    // this.caseSummaryElement.setFocus();
+  }
 
   ngOnDestroy(): void {
     this.cesCollectionService.onDestroyCollections();
     // this.dropUnitSubs.unsubscribe();
     // this.reminderSubs.unsubscribe();
-  }
-
-  ngAfterViewInit(): void {
-    // this.caseSummaryElement.setFocus();
   }
 
 
@@ -88,26 +85,15 @@ export class CollectionComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     if (isCES) {
-      // subscribe to ces rollover reminder
+      // subscribe to jolts rollover reminder
       this.reminderSubs = this.cesCollectionService.onRolloverReminder$.subscribe(rolloverMsg => {
         // show toast
         if (rolloverMsg != null) {
-
           this.messageService.clear();
           this.messageService.add({key: 'rolloverRemindertoast', severity: 'warn', summary: rolloverMsg.title, detail: rolloverMsg.reminderMsg, sticky: true });
         }
       });
-
-      // subscribe to drop units message
-      this.dropUnitSubs = this.cesCollectionService.onDropUnitReminder$.subscribe(dropUnitMessage => {
-        // show toast
-        if (dropUnitMessage != null) {
-          this.dropUnitMessage =  dropUnitMessage;
-          this.messageService.clear();
-          this.messageService.add({key: 'dropUnitRemindertoast', severity: 'warn', summary: '', detail: dropUnitMessage, sticky: true });
-        }
-      });
-    } else { // subscribe to jolts rollover reminder
+    } else { // subscribe to ces rollover reminder
       this.reminderSubs = this.joltsCollectionService.onRolloverReminder$.subscribe(rolloverMsg => {
         // show toast
         if (rolloverMsg != null) {

@@ -1,0 +1,136 @@
+
+<div *ngIf="CaseSummary as caseDetails">
+  <div class="p-grid">
+    <div class="p-col-12 p-md-2 p-lg-3" style="display: flex;">
+      <h4 #caseSummaryheader class="collection-header-margin" role="label" tabIndex="0">Case: </h4>
+      <h4 class="collection-header-margin batch-entry-header" id="casenum" role="label" tabIndex="0">
+        {{caseDetails.CaseNum}}</h4>
+    </div>
+
+    <div class="p-col-12 p-md-2 p-lg-2" style="display: flex;">
+      <h4 role="cell" class="collection-header-margin" tabIndex="0">Supervisor: </h4>
+      <h4 role="cell" tabIndex="0" class="collection-header-margin batch-entry-header"> {{caseDetails.Supervisor}}</h4>
+    </div>
+
+    <div class="p-col-12 p-md-2 p-lg-2" style="display: flex;">
+      <h4 role="cell" class="collection-header-margin" tabIndex="0">Owner: </h4>
+      <h4 role="cell" tabIndex="0" class="collection-header-margin batch-entry-header"> {{caseDetails.Owner}}</h4>
+    </div>
+
+    <div class="p-col-12 p-md-3 p-lg-3" style="display: flex;">
+      <h4 role="cell" class="collection-header-margin" tabIndex="0">Scheduled Date: </h4>
+      <h4 role="cell" tabIndex="0" class="collection-header-margin batch-entry-header"> {{caseDetails.ScheduledDate | date:'MMM dd, yyyy h:mm a'}}</h4>
+    </div>
+  </div>
+
+  <br>
+  <div class="p-grid">
+    <div class="p-col-2">
+        <div class="p-grid">
+            <label class="p-col-12 topElement" role="cell" tabIndex="0">
+                Contact
+            </label>
+            <label class="p-col-12 bottomElement" role="cell" tabIndex="0">
+                {{caseDetails.Contact}}
+            </label>
+        </div>
+    </div>
+    <div class="p-col-2">
+        <div class="p-grid">
+            <label class="p-col-12 topElement" role="cell" tabIndex="0">
+                Title
+            </label>
+            <label class="p-col-12 bottomElement" role="cell" tabIndex="0">
+                {{caseDetails.Title}}
+            </label>
+        </div>
+    </div>
+    <div class="p-col-1">
+        <div class="p-grid">
+            <label class="p-col-12 topElement" role="cell" tabIndex="0">
+                Phone
+            </label>
+            <label class="p-col-12 bottomElement" role="cell" tabIndex="0">
+                {{caseDetails.Phone}}
+            </label>
+        </div>
+    </div>
+    <div class="p-col-1">
+        <div class="p-grid">
+            <label class="p-col-12 topElement" role="cell" tabIndex="0">
+                Form
+            </label>
+            <label class="p-col-12 bottomElement" role="cell" tabIndex="0">
+                {{caseDetails.Form}}
+            </label>
+        </div>
+    </div>
+    <div class="p-col-1">
+        <div class="p-grid">
+            <label class="p-col-12 topElement" role="cell" tabIndex="0">
+                Contact Firm
+            </label>
+            <label class="p-col-12 bottomElement" role="cell" tabIndex="0">
+                {{caseDetails.ContactFirm }}
+            </label>
+        </div>
+    </div>
+    <div class="p-col-2">
+        <div class="p-grid">
+            <label class="p-col-12 topElement" role="cell" tabIndex="0">
+                Email
+            </label>
+            <label class="p-col-12 bottomElement" role="cell" tabIndex="0">
+                {{caseDetails.Email}}
+            </label>
+        </div>
+    </div>
+
+    <div class="p-col-1">
+      <div class="p-grid">
+          <label class="p-col-12 topElement" role="cell" tabIndex="0">
+              City
+          </label>
+          <label class="p-col-12 bottomElement" role="cell" tabIndex="0">
+              {{caseDetails.City}}
+          </label>
+      </div>
+    </div>
+    <div class="p-col-1">
+      <div class="p-grid">
+          <label class="p-col-12 topElement" role="cell" tabIndex="0">
+              State
+          </label>
+          <label class="p-col-12 bottomElement" role="cell" tabIndex="0">
+              {{caseDetails.State}}
+          </label>
+      </div>
+    </div>
+    <div class="p-col-1">
+      <div class="p-grid">
+          <label class="p-col-12 topElement" role="cell" tabIndex="0">
+              Mode
+          </label>
+          <label class="p-col-12 bottomElement" role="cell" tabIndex="0">
+              {{caseDetails.Mode}}
+          </label>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
