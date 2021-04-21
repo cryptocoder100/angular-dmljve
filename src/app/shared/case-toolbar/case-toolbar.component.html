@@ -1,0 +1,90 @@
+<!-- <p-toolbar *ngIf="toolbar$ | async as toolbar"> -->
+
+<p-toolbar>
+  <div class="ui-toolbar-group-left" *ngIf="toolbarConfig.IsCaseListFeatureEnabled">
+    <button [disabled]="disableOpenCase$ | async" icon="fa fa-folder-open" role="button" class="ui-button-default"
+      (click)='OpenCase()' accesskey="O" pButton type="button" label="O&#818;pen Case">
+    </button>
+    <p-dropdown [options]="caseReptModes" placeholder="Select a Case Mode" (onChange)="onCaseReptModeSelect($event)"
+      [style]="{'width':'210px'}">
+    </p-dropdown>
+    <p-dropdown [options]="userList" placeholder="Select User" [(ngModel)]="selectedUser"
+      (onChange)="onUserDropdownChange($event)" *ngIf="(showUserDropdown) && !(showParkedCaseDropdown)">
+    </p-dropdown>
+    <p-dropdown [options]="parkList" placeholder="Select Parked User" [(ngModel)]="selectedParked"
+      (onChange)="onUserDropdownChange($event)" *ngIf="surveyId == 'J' && (showParkedCaseDropdown)">
+    </p-dropdown>
+    <i class="fas fa-ellipsis-v space"></i>
+  </div>
+
+
+
+  <div class="ui-toolbar-group-left">
+    <button icon="fa fa-file" role="button" id="notesToolBarBtn" #notesToolBarBtn [disabled]="disableOpenCase$ | async"
+      (click)='ShowNotesDialog()' accesskey="N" class="ui-button-default" pButton type="button" label="N&#818;otes">
+    </button>
+    <button [disabled]="(disableOpenCase$ | async) || (disableDialer$ | async)" pButton type="button" role="button"
+      (click)='ShowDialerDialog()' accesskey="l" class="ui-button-default" icon="fa fa-phone-square"
+      label="Dial&#818;er">
+    </button>
+    <button [disabled]="disableOpenCase$ | async" pButton type="button" role="button" (click)='ShowSchedulerDialog()'
+      accesskey="h" class="ui-button-default" icon="fa fa-calendar" label="Sch&#818;eduler">
+    </button>
+    <button pButton role="button" type="button" *ngIf="enableGroupSchedule$ | async as show"
+      (click)='ShowGroupSchedulerDialog()' class="ui-button-default" accesskey="g" icon="fa fa-users"
+      label="G&#818;roup Schedule">
+    </button>
+    <button [disabled]="disableOpenCase$ | async" pButton role="button" type="button" (click)='ShowPrintFaxDialog()'
+      accesskey="p" class="ui-button-default" icon="fa fa-fax" label="P&#818;rint/Fax">
+    </button>
+    <button *ngIf="surveyId === 'C'" [disabled]="disableOpenCase$ | async" pButton role="button" type="button"
+      (click)='ShowBatchFaxEntryDialog()' accesskey="B" class="ui-button-default" icon="fa fa-th-list"
+      label="B&#818;atch Fax Entry">
+    </button>
+    <button *ngIf="surveyId === 'C'" [disabled]="disableOpenCase$ | async" pButton role="button" type="button"
+      (click)='ShowTransferRequestDialog()' accesskey="T" class="ui-button-default" icon="fas fa-exchange-alt"
+      label="T&#818;ransfer Request">
+    </button>
+
+    <i class="fas fa-ellipsis-v space"></i>
+  </div>
+
+  <div class="ui-toolbar-group-left" *ngIf="toolbarConfig.IsCaseSaveFeaturesEnabled">
+    <button pButton role="button" accesskey="s" type="button" class="ui-button-default" icon="fa fa-save"
+      [disabled]="toolbarConfig.IsReadOnlyCase" label="S&#818;ave" (click)="onSave(false)">
+    </button>
+    <button pButton role="button" accesskey="v" type="button" class="ui-button-default" icon="fas fa-share-square"
+      [disabled]="toolbarConfig.IsReadOnlyCase" label="Sav&#818;e And Close" (click)="onSave(true)">
+    </button>
+    <button pButton role="button" accesskey="c" type="button" class="ui-button-default" icon="fas fa-window-close"
+      label="Return to C&#818;ase List" (click)="onCancel()">
+    </button>
+  </div>
+
+  <div class="ui-toolbar-group-right">
+    <div class="ui-inputgroup">
+      <span class="ui-inputgroup-addon">Q&#818;uick Access</span>
+      <input type="text" id="search-box" [(ngModel)]="searchUnitNumber" (keyup.enter)="onSearchEnterKey()" accesskey="q"
+        pInputText placeholder="Enter Unit ID">
+      <button role="button" pButton type="button" (click)="onSearchClick()" icon="fas fa-search"
+        class="ui-button-default">
+      </button>
+    </div>
+
+
+    <!-- <kbd class="quik-access-badge">Q&#818;uick Access</kbd>
+      <input id="search-box" type="text" accesskey="q" pInputText placeholder="Enter Unit ID">
+      <button pButton type="button" icon="fas fa-search" class="ui-button-default"></button> -->
+  </div>
+</p-toolbar>
+
+<!-- <div class="loading-indicator" *ngIf="caseDetailsSaving$ | async">
+  <p-progressSpinner></p-progressSpinner>
+</div> -->
+
+<p-sidebar *ngIf="showSummary" aria-roledescription="Search Summary Opened" [(visible)]="showSummary" position="left"
+  styleClass="ui-sidebar-md">
+  <fsms-tcw-search-summary [unitNumber]="searchUnitNumber" [searchResultsCase$]="searchResultsCase$"
+    (OpenCaseDetail)='CaseOpened($event)'>
+  </fsms-tcw-search-summary>
+</p-sidebar>
