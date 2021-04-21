@@ -1,0 +1,242 @@
+<!-- Add these after development done -->
+<!-- stateStorage="local" [stateKey]="stateKey" -->
+<p-table #dt [columns]="cols" [value]="caseListSubject | async" [style]="{width:'100%'}" dataKey="CASE_NUM"
+    [rowTrackBy]="trackBy" [sortField]="sortFieldName" [sortOrder]="sortOrder" [responsive]="true" scrollHeight="48vh"
+    [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" [rowHover]="true" [autoLayout]="true"
+    [paginator]="true" [rows]="15" [(selection)]="selectedCases" stateStorage="local" [stateKey]="stateKey"
+    (onFilter)="onFilter($event)" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+    [(selectionMode)]="selectionMode" [loading]="isLoadingChange$ | async">
+
+    <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+            <col *ngFor="let col of columns" [style.width]="col.width">
+        </colgroup>
+    </ng-template>
+
+    <ng-template pTemplate="caption" class="case-list-caption">
+        <div class="p-grid">
+          <div class="p-col-2 pull-left">
+            <label tabindex="0" >CaseList Options: </label>
+          </div>
+            <div class="p-col-2" style="text-align: left;align-self: center;">
+                <p-dropdown [options]="scheduleFilters" [(ngModel)]="scheduleFilterOption"
+                    [hidden]="gridType != gridTypes.Scheduled || surveyId == surveyIds.J"
+                    (onChange)="scheduleFilterChanged($event.value)">
+                </p-dropdown>
+            </div>
+            <div class="p-col-2" style="text-align: left;align-self: center;">
+                <label *ngIf="!nextScheduledCall; else hasNextCall"
+                    style="display: inline;margin: 0 2em;white-space: nowrap;"> 0 Calls
+                    Scheduled Today</label>
+                <ng-template #hasNextCall>
+                    <button pButton type="button" aria-hidden="false" class="ui-button-default"
+                        (click)="openNextScheduledCase()"
+                        label="Next Call Scheduled for {{nextScheduledCall | date : 'MMM d, y, h:mm a'}}">
+                    </button>
+                </ng-template>
+            </div>
+            <div class="p-col-1">
+                <!-- placeholder -->
+            </div>
+            <div class="p-col-1" style="text-align: center;white-space: nowrap;display: inline;align-self: flex-end;">
+
+                <p-inputSwitch [(ngModel)]="selectionModeSwitch" (onChange)="onSelectionModeChange()">
+                </p-inputSwitch>
+                <label style="display: inline;white-space: nowrap;vertical-align: super;">
+                    {{(selectionModeSwitch) ? 'Multiple Select': 'Single Select'}}</label>
+
+            </div>
+            <div class="p-col-1">
+                <!-- placeholder -->
+            </div>
+            <div class="p-col-3" style="text-align: right;white-space: nowrap;">
+                <div class="ui-inputGroup" style="margin-top:2px">
+                    <span class="ui-inputgroup-addon">
+                        <i class="fa fa-search" style="margin-right:4px"></i>
+                    </span>
+                    <input type="text" [(ngModel)]="filterGlobalText" pInputText size="50"
+                        placeholder="Case List Filter" style="width:95%"
+                        (input)="dt.filterGlobal($event.target.value, 'contains')">
+                </div>
+            </div>
+        </div>
+
+    </ng-template>
+
+
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field" pResizableColumn pReorderableColumn>
+                {{col.header}}
+                <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                    ariaLabelDesc="Activate to sort in descending order"
+                    ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+            </th>
+        </tr>
+        <tr>
+            <th *ngFor="let col of columns" [ngSwitch]="col.field" class="ui-fluid">
+                <p-multiSelect *ngSwitchCase="'colorCodeCes'" [options]="colorCodes"
+                    [ngModel]="dt.filters['colorCodeCes']?.value" styleClass="ui-column-filter" appendTo="body"
+                    defaultLabel="All" (onChange)="dt.filter($event.value, col.field, 'in')"
+                    [attr.aria-label]="'Select option for' + 'colorCodes'" >
+                </p-multiSelect>
+                <p-multiSelect *ngSwitchCase="'colorCodeJolts'" [options]="colorCodes"
+                    [ngModel]="dt.filters['colorCodeJolts']?.value" styleClass="ui-column-filter" appendTo="body"
+                    defaultLabel="All" (onChange)="dt.filter($event.value, col.field, 'in')"
+                    [attr.aria-label]="'Select option for ' + 'colorCodes'" >
+                </p-multiSelect>
+                <input *ngSwitchCase="'RESP_CODE'" pInputText type="text" [value]="dt.filters['RESP_CODE']?.value"
+                    (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]" >
+                <input *ngSwitchCase="'REPT_MODE_COND'" pInputText type="text"
+                    [value]="dt.filters['REPT_MODE_COND']?.value"
+                    (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]" >
+                <input *ngSwitchCase="'PRIORITY'" pInputText type="text" [value]="dt.filters['PRIORITY']?.value"
+                    (input)="dt.filter($event.target.value, col.field, 'contains')"
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]" >
+                <input *ngSwitchCase="'ALERT'" pInputText type="text" [value]="dt.filters['ALERT']?.value"
+                    (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]" >
+                <input *ngSwitchCase="'UI_NUMBER'" pInputText type="text" [value]="dt.filters['UI_NUMBER']?.value"
+                    (input)="dt.filter($event.target.value, col.field, 'contains')"
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]" >
+                <div *ngSwitchCase="'SCHED_DATE_TIME'" tabindex="0">
+                    <p-calendar #datePicker appendTo="body" selectionMode="range" [readonlyInput]="true" [(ngModel)]="dateFilters"
+                        (onSelect)="applyFilter($event, dt)" showButtonBar="true" (onClose)="closeEvent($event)"
+                        (onClearClick)="clearCaledarFilter($event, dt)" [attr.aria-label]="'Select date for ' + 'Appointment'" tabindex="0">
+                    </p-calendar>
+                    <!-- dt.filter($event, col.field, 'dateRangeFilter') -->
+                </div>
+                <div *ngSwitchCase="'CASE_NUM'" #nextFocusElem tabindex="0">
+                    <input *ngSwitchCase="'CASE_NUM'" pInputText type="text" [value]="dt.filters['CASE_NUM']?.value"
+                        (input)="dt.filter($event.target.value, col.field, 'contains')"
+                        [attr.aria-label]="'Enter filter text for ' + [col.description]" >
+                </div>
+                <input *ngSwitchCase="'TOUCH'" pInputText type="text" [value]="dt.filters['TOUCH']?.value"
+                    (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]" >
+                <input *ngSwitchCase="'CON_FIRM'" pInputText type="text" [value]="dt.filters['CON_FIRM']?.value"
+                    (input)="dt.filter($event.target.value, col.field, 'contains')"
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]" >
+                <p-multiSelect *ngSwitchCase="'TIMEZONE'" [options]="timezones"
+                    [ngModel]="dt.filters['TIMEZONE']?.value" styleClass="ui-column-filter" appendTo="body"
+                    defaultLabel="All" (onChange)="dt.filter($event.value, col.field, 'in')" 
+                    [attr.aria-label]="'Select option for ' + 'Time zone'" >
+                </p-multiSelect>
+                <input *ngSwitchCase="'respondentTimeString'" pInputText type="text"
+                    [value]="dt.filters['respondentTimeString']?.value"
+                    (input)="dt.filter($event.target.value, col.field, 'contains')"
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]" >
+                <input *ngSwitchCase="'contactName'" pInputText type="text" [value]="dt.filters['contactName']?.value"
+                    (input)="dt.filter($event.target.value, col.field, 'contains')"
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]" >
+                <!-- <p-inputMask *ngSwitchCase="'phoneNumber'" [(ngModel)]="phoneValue"
+                        mask="(999) 999-9999"
+                        (onBlur)="dt.filter($event, col.field, 'phoneMaskFilter')"></p-inputMask> -->
+                <input *ngSwitchCase="'phoneNumber'" pInputText type="text" [value]="dt.filters['phoneNumber']?.value"
+                    (input)="dt.filter($event.target.value, col.field, 'contains')"
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]" >
+                <input *ngSwitchCase="'ACTIVE_UNITS_COUNT'" pInputText type="text"
+                    [value]="dt.filters['ACTIVE_UNITS_COUNT']?.value"
+                    (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]" >
+                <input *ngSwitchCase="'UNITS_CNT'" pInputText type="text" [value]="dt.filters['UNITS_CNT']?.value"
+                    (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]">
+                <input *ngSwitchCase="'FIPS'" pInputText type="text" [value]="dt.filters['FIPS']?.value"
+                    (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)" 
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]">
+                <input *ngSwitchCase="'EI_NUMBER'" pInputText type="text" [value]="dt.filters['EI_NUMBER']?.value"
+                    (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)" 
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]">
+                <input *ngSwitchCase="'STATE'" pInputText type="text" [value]="dt.filters['STATE']?.value"
+                    (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]">
+                <input *ngSwitchCase="'PANEL_NUM'" pInputText type="text" [value]="dt.filters['PANEL_NUM']?.value"
+                    (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)" 
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]">
+                <input *ngSwitchCase="'CMI'" pInputText type="text" [value]="dt.filters['CMI']?.value"
+                    (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)" 
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]">
+                <input *ngSwitchCase="'CASE_OWNER'" pInputText type="text" [value]="dt.filters['CASE_OWNER']?.value"
+                    (input)="dt.filter($event.target.value, col.field, 'contains')" 
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]">
+                <input *ngSwitchCase="'PLP'" pInputText type="text" [value]="dt.filters['PLP']?.value"
+                    (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)" 
+                    [attr.aria-label]="'Enter filter text for ' + [col.description]">
+            </th>
+        </tr>
+    </ng-template>
+
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" (dblclick)="onCaseListDblClick($event, rowData)"
+            (keyup.space)="onCaseListDblClick($event, rowData)" [ngClass]="rowData.ALERT === 'N' ? 'errorStyle' : null">
+            <td *ngFor="let col of columns" class="ui-resizable-column" [ngSwitch]="col.field">
+                <div *ngSwitchCase="'colorCodeCes'" >
+                    <span role = 'cell' [attr.aria-label]="colorCodeCes + ' ' + rowData[col.field]" tabindex="0" style="width: 50px;font-size: 13px;" class="badge" [ngClass]="{
+                                    'badge-secondary' : rowData['colorCodeCes'] == undefined,
+                                    'badge-success': rowData['colorCodeCes'] === '1',
+                                    'badge-danger': rowData['colorCodeCes'] === '2',
+                                    'badge-warning': rowData['colorCodeCes'] === '3',
+                                    'badge-primary': rowData['colorCodeCes'] === '4',
+                                    'badge-dark': rowData['colorCodeCes'] === '5'
+                                }">{{rowData[col.field]}}
+
+                    </span>
+                </div>
+                <div *ngSwitchCase="'colorCodeJolts'" >                    
+                        <span role = 'cell' [attr.aria-label]="ALERT + ' ' + rowData['ALERT']" tabindex="0"  style="width: 50px;font-size: 13px;" class="badge" [ngClass]="{
+                                    'badge-secondary' : rowData['colorCodeJolts'] == undefined,
+                                    'badge-success': rowData['colorCodeJolts'] === '1',
+                                    'badge-danger': rowData['colorCodeJolts'] === '2',
+                                    'badge-warning': rowData['colorCodeJolts'] === '3',
+                                    'badge-dark': rowData['colorCodeJolts'] === '4',
+                                    'badge-primary': rowData['colorCodeJolts'] === '5'
+                                }">{{rowData[col.field]}}
+                        </span>                    
+                </div>
+                <div *ngSwitchCase="'ALERT'">                    
+                    <span role = 'cell' [attr.aria-label]="ALERT + ' ' + rowData['ALERT']" tabindex="0" class="badge" [ngClass]="{
+                                'badge-info' : rowData['ALERT'] === 'New',
+                                'badge-warning': rowData['ALERT'] === 'Temp',
+                                'badge-warning': rowData['ALERT'] === 'TR'
+                            }">{{ rowData['ALERT'] }}</span>                          
+                </div>
+                <span *ngSwitchDefault>
+                    <div role = 'cell' [attr.aria-label]="col.description + ' ' + rowData[col.field]" tabindex="0">{{ displayData(col,rowData)}}</div>
+                </span>
+            </td>
+        </tr>
+    </ng-template>
+
+
+    <ng-template pTemplate="summary" let-rowIndex="rowIndex">
+        <div class="p-grid">
+            <div style="text-align: left;white-space: nowrap;" class="p-col-6">
+                {{selectedCases && !selectionModeSwitch ? 'Selected Case: ' + (selectedCases.CASE_NUM ? selectedCases.CASE_NUM : '') : ''}}
+            </div>
+
+            <div style="white-space: nowrap" class="p-col-2">
+                <span *ngIf="selectionModeSwitch">
+                    <!-- if selection mode is multi -->
+                    {{ selectedCases ? selectedCases.length : '0' }} cases selected of
+                    {{ dt.totalRecords}} Cases
+                </span>
+                <!-- if selection mode is single -->
+                <span *ngIf="!selectionModeSwitch">
+                    {{ selectedCases && !selectionModeSwitch ? (index ? index : '0'  ) + ' of' :'0 of' }}
+                    {{ dt.totalRecords}} Cases
+                </span>
+            </div>
+
+            <div style="text-align: right;white-space: nowrap;" class="p-offset-1 p-col-3">
+                <button (click)="onResetTableState(dt)" label="Reset Fi&#818;lters" aria-hidden="false" accesskey="I"
+                    class="ui-button-default" pButton type="button">
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+</p-table>
