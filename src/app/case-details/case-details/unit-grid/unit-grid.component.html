@@ -1,0 +1,147 @@
+<button [disabled]='!enableShowAggregation' *ngIf="!showAggregation.value && surveyId == surveyIds.C" icon="fas fa-eye"
+    title="Show Aggregation" class="ui-button-default" accesskey="w" pButton type="button" (click)="onShowAggregation()"
+    label="Show&#818; Aggregation">
+</button>
+
+<button *ngIf="showAggregation.value" icon="fas fa-eye-slash" title="Hide Aggregation" class="ui-button-danger"
+    accesskey="h" pButton type="button" (click)="onHideAggregation()" label="H&#818;ide Aggregation">
+</button>
+
+<!-- [@hideSlide]='animationState1' [@showSlide]="animationState" -->
+<button *ngIf="showAggregation.value && aggregationStep === aggregationSteps.None" icon="fa fa-plus"
+    title="Aggregate Units" class="ui-button-default gully-btn" accesskey="g" pButton type="button"
+    (click)="onClickAggregateUnits()" label="Ag&#818;gregate Units">
+</button>
+
+<!-- [@hideSlide]='animationState1' [@showSlide]="animationState" -->
+<button *ngIf="showAggregation.value && aggregationStep === aggregationSteps.None" icon="fa fa-minus"
+    title="Make Units Single" class="ui-button-default gully-btn" accesskey="l" pButton type="button"
+    (click)="onClickMakeUnitsSingle()" label="Make Units Singl&#818;e">
+</button>
+<button
+    *ngIf="showAggregation.value && (aggregationStep === aggregationSteps.MakeSingleSelectChildren || aggregationStep === aggregationSteps.AggregateSelectChildren)"
+    icon="fa fa-file" title="Select Child Units" class="ui-button-default gully-btn" accesskey="1" pButton type="button"
+    (click)="onClickSelectChildUnits()" label="Select Child Units (1&#818;)">
+</button>
+<button *ngIf="showAggregation.value && aggregationStep === aggregationSteps.AggregateSelectParent" icon="fa fa-file"
+    title="Select Parent Unit" class="ui-button-default gully-btn" accesskey="1" pButton type="button"
+    (click)="onClickSelectParentUnit()" label="Select Parent Unit (1&#818;)">
+</button>
+<button *ngIf="showAggregation.value && aggregationStep !== aggregationSteps.None" icon="fa fa-file" title="Cancel"
+    class="ui-button-danger gully-btn" accesskey="2" pButton type="button" (click)="onCancelAggregationStep()"
+    label="Cancel (2&#818;)">
+</button>
+
+<p-toggleButton tabindex="0" aria-label="Show Active Units" offLabel="Show Active Units (3&#818;)"
+  accesskey="3" class="ui-button-default float-right" onLabel="Show All Units (3&#818;)" (onChange)="onShowActiveUnitsChanged($event)"
+  offIcon="fas fa-eye-slash" onIcon="far fa-eye"></p-toggleButton>
+
+<p-toggleButton tabindex="0" aria-label="" offLabel="Hide &#818;Child Units (6&#818;)"
+  accesskey="6" class="ui-button-default float-right" onLabel="Show Children (6&#818;)" (onChange)="onShowChildrenChanged($event)"
+  offIcon="fas fa-eye-slash" onIcon="far fa-eye"></p-toggleButton>
+
+<button [disabled]='!enableSetStatewide' icon="fas fa-sitemap" *ngIf="surveyId == surveyIds.C" title="Set Statewide"
+    class="ui-button-default float-right" accesskey="s" pButton type="button" label="S&#818;et Statewide"
+    (click)="onShowStatewideDialog()">
+</button>
+
+<p-toggleButton tabindex="0" aria-label="Zoom" offLabel="Z&#818;oom In"
+  accesskey="Z" class="ui-button-default float-right" onLabel="Z&#818;oom Out" (onChange)="fillUnitGrid($event)"
+  offIcon="fas fa-search-plus" onIcon="fas fa-search-minus"></p-toggleButton>
+
+<!-- <button icon="fas fa-sitemap" title="Zoom Unit Grid"
+    class="ui-button-default float-right" accesskey="z" pButton type="button" label="Z&#818;oom"
+    (click)="fillUnitGrid()">
+</button> -->
+
+<!--Need additional rows space in JOLTS but not in CES  -->
+<div *ngIf="surveyId == surveyIds.J">
+  <br><br>
+</div>
+
+
+
+
+
+<p-table #dt [value]="unitList$ | async" styleClass="addr-enroll-unit-grid" [columns]="gridCols"
+    [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" [scrollHeight]="scrollHeight.value"
+    [selectionMode]="selectionMode" [(selection)]="selectedUnit" [rowTrackBy]="trackBy" [rowHover]="false"
+    (onRowSelect)="onRowSelect($event)">
+    <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+            <col *ngFor="let col of columns" [style.width]="col.width">
+        </colgroup>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field" pResizableColumn pReorderableColumn>
+                {{col.header}}
+                <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                    ariaLabelDesc="Activate to sort in descending order"
+                    ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+            </th>
+        </tr>
+        <tr>
+            <th *ngFor="let col of columns" [ngSwitch]="col.field" style="margin-left: 0px;">
+                <input pInputText type="text" [attr.aria-label]="'Enter filter text for ' + [col.header]"
+                    [value]="dt.filters['DC']?.value" [style.width]="col.filterWidth"
+                    (input)="dt.filter($event.target.value, col.field, 'contains')"
+                    [value]="dt.filters[col.field]? dt.filters[col.field].value :''">
+            </th>
+        </tr>
+
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr class="ui-widget-header"
+            *ngIf="showAggregation.value === true && rowGroupMetaData[rowData.ReportWithStateCode].index === rowIndex">
+            <td colspan="3">
+                <span style="font-weight:bold" tabindex="0">Report With: {{rowData.ReportWithStateCode}}</span>
+            </td>
+        </tr>
+        <tr [pSelectableRow]="rowData" [pSelectableRowDisabled]="disableRowSelection"
+          *ngIf="((showOnlyActiveUnits$ | async) ? (rowData.isActiveUnit == (showOnlyActiveUnits$ | async)) : true) && ((hideChildren$ | async) ? (rowData.isChildUnit != (hideChildren$ | async)) : true)">
+            <td *ngFor="let col of columns" [ngSwitch]="col.field" class="ui-resizable-column">
+                <div *ngSwitchDefault role="cell" [attr.aria-label]="col.header + ' ' + displayData(col, rowData)"
+                    [title]="displayData(col, rowData)"
+                    [ngStyle]="col.field === 'OfferDate' || col.field === 'SampleStopDate' ? {'color':'red','background-color':'yellow'} : {}"
+                    tabindex="0">{{ displayData(col, rowData) }}</div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+
+
+<!--Set Statewide popup -->
+<!--CES ONLY-->
+<p-dialog (onShow)="setDialogFocus()" [showHeader]=true [closable]=false [closeOnEscape]=false [dismissableMask]=false [modal]=true [resizable]=true
+    [style]="{width: '50vw'}" [draggable]=true [positionLeft]=50 [positionTop]=50
+    [visible]='canShowStateWideAggregationDialog'>
+
+    <p-header tabindex="0" #beginSetStateWide>
+        Choose UI Numbers (with multi-units listed for) for Aggregation
+    </p-header>
+
+    <div class="p-grid" *ngIf="stateWideUINumbersList$ | async as stateWideUINumbersList">
+        <div class="p-col-5">
+            <div class="p-col-12" *ngFor="let uiNumber of stateWideUINumbersList; let indexOfelement=index;">
+                <p-checkbox tabindex="0" title="{{uiNumber}}" label="{{uiNumber}}" value="{{uiNumber}}"
+                    [inputId]="indexOfelement" [(ngModel)]="selectedStateWideUINumbersList"></p-checkbox>
+            </div>
+        </div>
+        <div class="p-col-7">
+        </div>
+    </div>
+
+
+    <p-footer>
+        <label tabindex="0" class="screeningtext-pink pull-left-l">Alt+4 is the shortcut key for aggregate
+            units.</label>
+        <button type="button" tabindex="0" [disabled]="!(selectedStateWideUINumbersList.length > 0)"
+            (click)="onAggregateStateWideUnits()" pButton icon="pi pi-check" accesskey="4"
+            label="Aggregate Units (4&#818;)"></button>
+        <button type="button" tabindex="0" pButton icon="pi pi-times" accesskey="5"
+            (click)="canShowStateWideAggregationDialog = false" label="Cancel (5&#818;)"></button>
+    </p-footer>
+
+</p-dialog>
