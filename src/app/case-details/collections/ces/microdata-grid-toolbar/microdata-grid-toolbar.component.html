@@ -1,0 +1,82 @@
+
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12 ui-md-12 tcw-mcirodata-caption">
+
+    <p-toolbar class="tcw-microdatagrid-toolbar" aria-label="Microdata Grid Toolbar">
+      <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-3">
+          <div class="ui-inputgroup">
+             <label tabindex="0" title="Unit Selected {{SelectedUnit ? SelectedUnit.UnitId : ''}}" for="microDataUnitdd">Selected Unit:</label>
+            <button (click)="prevUnit()" [disabled]="prevButtonDisable$ | async" title="Previous Unit" accesskey="<" pButton type="button"  icon="fas fa-backward" class="ui-button-default-small"></button>
+            <p-dropdown role="option" id="microDataUnitdd" optionLabel="DisplayValue" [options]="collectionUnitsVm$ | async" [(ngModel)]="SelectedUnit"></p-dropdown>
+            <button (click)="nextUnit()" [disabled]="nextButtonDisable$ |async" title="Next Unit" pButton type="button" accesskey=">" icon="fas fa-forward"  class="ui-button-default-small"></button>
+          </div>
+
+
+          <!-- <div class="ui-inputgroup">
+              <label style="width: 40px;">Unit: &nbsp;</label>
+
+
+              <p-dropdown optionLabel="DisplayValue" [options]="collectionUnits$ | async" [(ngModel)]="SelectedUnit"  [style]="{maxWidth: '110px'}"></p-dropdown>
+              <button (click)="nextUnit()" [disabled]="nextButtonDisable$ |async" title="Next Unit >&#818;" pButton type="button" accesskey=">" icon="fas fa-forward"  class="ui-button-default-small"></button>
+          </div> -->
+        </div>
+
+        <div class="ui-g-12 ui-md-2 top-gully">
+          <div class="ui-inputgroup">
+            <label tabindex="0" aria-label="Company Location">Location: &nbsp;</label>
+            <label tabindex="0">
+              <b>{{(unitSelectionChanged$ | async)?.Location}} </b>
+            </label>
+          </div>
+        </div>
+
+        <div class="ui-g-12 ui-md-3 top-gully">
+          <div class="ui-inputgroup">
+            <label tabindex="0" title="Company Name">Company:    &nbsp;</label>
+            <label tabindex="0" class="microgrid-toolbar-text">
+              <b>{{(unitSelectionChanged$ | async)?.PrimaryName}} </b>
+            </label>
+          </div>
+        </div>
+
+        <div class="ui-g-12 ui-md-1 top-gully">
+          <div class="ui-inputgroup">
+            <label tabindex="0" title="State Name">State:   &nbsp; </label>
+            <label tabindex="0" class="tcw-panel-data-color">
+              <b>{{(unitSelectionChanged$ | async)?.EditableStateAddress}}</b>
+            </label>
+          </div>
+        </div>
+
+        <div class="ui-g-12 ui-md-3">
+          <div class="ui-inputgroup right">
+             <button [ngClass]="(unitSelectionChanged$ | async)?.MPayStat == 'T' ? 'ui-button-default-red' : 'ui-button-default' " (click)='openMultiPay()' title="Multi Pay" role="button" accesskey="M" label="&#818;Multi-pay" pButton type="button" icon="fas fa-receipt" ></button>
+            <button icon="fab fa-confluence" role="button" class="ui-button-default" [disabled]="!IsConvRefEmpty" (click)='onRollOverButtonClick()' accesskey="R" pButton type="button" label="&#818;RollOver">
+            </button>  <!--[disabled]="IsConvRefEmpty" -->
+          </div>
+        </div>
+      </div>
+    </p-toolbar>
+  </div>
+
+
+      <div class="ui-g-12 ui-md-12" >
+        <div class="p-grid">
+          <div class="p-col-6">
+              <label style="font-size: 16px;">Collections</label>
+          </div>
+          <div class="p-col-6">
+            <label style="font-size: 16px;">Averages</label>
+          </div>
+        </div>
+      </div>
+
+</div>
+<!-- <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog> -->
+
+
+
+
+
+
