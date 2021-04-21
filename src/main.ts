@@ -1,19 +1,33 @@
-import "./polyfills";
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-import { enableProdMode } from "@angular/core";
-import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
 
-import { AppModule } from "./app/app.module";
+export function getBaseUrl() {
+  if (environment.baseUrl == null) {
+    return document.getElementsByTagName('base')[0].href;
+  } else {
+    return environment.baseUrl;
+  }
+}
 
-platformBrowserDynamic()
-  .bootstrapModule(AppModule)
-  .then(ref => {
-    // Ensure Angular destroys itself on hot reloads.
-    if (window["ngRef"]) {
-      window["ngRef"].destroy();
-    }
-    window["ngRef"] = ref;
+export function getWithCredentials() {
+  if (environment.withCredentials == null) {
+    return false;
+  } else {
+    return environment.withCredentials;
+  }
+}
 
-    // Otherwise, log the boot error
-  })
+const providers = [
+  { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] },
+  { provide: 'WITH_CREDENTIALS', useFactory: getWithCredentials, deps: [] }
+];
+
+if (environment.production) {
+  enableProdMode();
+}
+
+platformBrowserDynamic(providers).bootstrapModule(AppModule)
   .catch(err => console.error(err));
